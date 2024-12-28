@@ -1,8 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "quiz.h"
 
 int main()
 {
-    printf("Hello world!\n");
+    GameState* gs = GameStateInit();
+
+    GameStateFree(gs);
+
     return 0;
 }
