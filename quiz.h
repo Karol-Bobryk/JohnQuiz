@@ -1,24 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+// Amount of questions is fixed to 15
 
-const size_t prizes[] = {
-        100,
-        200,
-        300,
-        500,
-        1000,
-        2000,
-        4000,
-        8000,
-        16000,
-        32000,
-        64000,
-        125000,
-        250000,
-        500000,
-        1000000
-    };
+#ifndef QUIZ_H
+#define QUIZ_H
+const size_t PRIZES[15];
+#endif
 
 typedef struct {
     bool is50_50Used;
@@ -28,10 +16,8 @@ typedef struct {
 
 typedef struct {
     size_t questionCurId;
-    size_t questionsLen;
     size_t prizeSecured;
     size_t prizeCur;
-    size_t prizePotential;
 
     Lifelines lifelines;
 } GameState;
