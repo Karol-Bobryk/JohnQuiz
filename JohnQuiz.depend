@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1735424429 source:c:\users\karol\desktop\c zaliczenie\johnquiz\main.c
+1735425169 source:c:\users\karol\desktop\c zaliczenie\johnquiz\main.c
 	"quiz.h"
 
-1735425049 c:\users\karol\desktop\c zaliczenie\johnquiz\quiz.h
+1735530609 c:\users\karol\desktop\c zaliczenie\johnquiz\quiz.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 
-1735425147 source:c:\users\karol\desktop\c zaliczenie\johnquiz\quiz.c
+1735530890 source:c:\users\karol\desktop\c zaliczenie\johnquiz\quiz.c
 	"quiz.h"
 

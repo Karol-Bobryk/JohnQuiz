@@ -22,14 +22,22 @@ GameState* GameStateInit(){
 
     GameState* gs = malloc(sizeof(GameState));
 
-    gs->questionCurId = 0;
+    gs->prizeCur = 0;
+    gs->prizeSecured = 0;
 
-    gs->prizeCur=0;
-    gs->prizeSecured=0;
+    // initialization of a Lifelines structure
+    gs->lifelines.is50_50Used = false;
+    gs->lifelines.isAudienceHelpUsed = false;
+    gs->lifelines.isPhoneFriendUsed = false;
 
-    gs->lifelines.is50_50Used = 0;
-    gs->lifelines.isAudienceHelpUsed = 0;
-    gs->lifelines.isPhoneFriendUsed = 0;
+    gs->lifelines.audienceHelpContentLen = 0;
+
+    // initialization of a Question structure
+    for (int i = 0; i < 4; ++i)
+        gs->question.answLen[i] = 0;
+    gs->question.correctAnsw = 0;
+    gs->question.curId = 0;
+    gs->question.strContentLen = 0;
 
     return gs;
 }
