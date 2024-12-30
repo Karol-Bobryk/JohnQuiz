@@ -20,7 +20,7 @@ typedef struct {
 
 /*
 *   Every question entry in a file should look like this:
-*   <Question content>:<Answer 0>:<Answer 1>:<Answer 2>:<Answer 3>:<Correct answer index>:<Audience help content>
+*   <Question content>:<Answer 0>:<Answer 1>:<Answer 2>:<Answer 3>:<Correct answer index>:<Audience help content>\n
 */
 
 typedef struct {
@@ -50,3 +50,13 @@ typedef struct {
 GameState* GameStateInit();
 
 void GameStateFree(GameState*);
+
+size_t fGetSegLen(FILE *);
+
+void printLifelines(Lifelines*);
+
+void printQuestion(Question *);
+
+void printGameState(GameState *);
+
+int fDecodeQuestion(FILE*, Question*, Lifelines*);
