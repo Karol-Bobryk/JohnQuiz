@@ -41,7 +41,7 @@ GameState* GameStateInit(){
     gs->question.curId = 0;
     gs->question.strContentLen = 0;
 
-    gs->questionsFile = fopen(DEFAULT_FILE, "r");
+    gs->questionsFile = fopen(DEFAULT_FILE, "a+");
 
     if(gs->questionsFile == NULL)
         fprintf(stderr, "[ ERROR ] File %s not found", DEFAULT_FILE);
