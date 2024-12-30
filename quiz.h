@@ -60,3 +60,5 @@ void printQuestion(Question *);
 void printGameState(GameState *);
 
 int fDecodeQuestion(FILE*, Question*, Lifelines*);
+
+void freeDecodedQuestion(Question*, Lifelines*);

@@ -116,7 +116,8 @@ size_t fGetSegLen(FILE *f){
 *       qf - file containing questions,
 *           function assumes file pointer is already
 *           at the beginning of a desired line
-*       q - a reference to Question structure
+*       q - a reference to a Question structure
+*       ll - a reference to a Lifelines structure
 *
 *   return value:
 *       0 - successful execution
@@ -175,17 +176,17 @@ int fDecodeQuestion(FILE* qf, Question* q, Lifelines* ll){
 */
 void printLifelines(Lifelines* ll) {
 
-    printf("Lifelines:\n");
-    printf("  is50_50Used: %s\n", ll->is50_50Used ? "true" : "false");
-    printf("  isAudienceHelpUsed: %s\n", ll->isAudienceHelpUsed ? "true" : "false");
-    printf("  isPhoneFriendUsed: %s\n", ll->isPhoneFriendUsed ? "true" : "false");
+    printf("[ INFO ] Lifelines:\n");
+    printf("[ INFO ]   is50_50Used: %s\n", ll->is50_50Used ? "true" : "false");
+    printf("[ INFO ]   isAudienceHelpUsed: %s\n", ll->isAudienceHelpUsed ? "true" : "false");
+    printf("[ INFO ]   isPhoneFriendUsed: %s\n", ll->isPhoneFriendUsed ? "true" : "false");
 
     if (ll->phoneFriendContent != NULL) {
-        printf("  phoneFriendContent: %s\n", ll->phoneFriendContent);
+        printf("[ INFO ]   phoneFriendContent: %s\n", ll->phoneFriendContent);
     } else {
-        printf("  phoneFriendContent: NULL\n");
+        printf("[ INFO ]   phoneFriendContent: NULL\n");
     }
-    printf("  phoneFriendContentLen: %zu\n", ll->phoneFriendContentLen);
+    printf("[ INFO ]   phoneFriendContentLen: %zu\n", ll->phoneFriendContentLen);
 }
 
 /*
@@ -198,22 +199,22 @@ void printLifelines(Lifelines* ll) {
 */
 void printQuestion(Question* q) {
 
-    printf("Question:\n");
-    printf("  curId: %zu\n", q->curId);
+    printf("[ INFO ] Question:\n");
+    printf("[ INFO ]   curId: %zu\n", q->curId);
 
     if (q->strContent != NULL) {
-        printf("  strContent: %s\n", q->strContent);
+        printf("[ INFO ]   strContent: %s\n", q->strContent);
     } else {
-        printf("  strContent: NULL\n");
+        printf("[ INFO ]   strContent: NULL\n");
     }
-    printf("  strContentLen: %zu\n", q->strContentLen);
+    printf("[ INFO ]   strContentLen: %zu\n", q->strContentLen);
 
-    printf("  Answers:\n");
+    printf("[ INFO ]   Answers:\n");
     for (size_t i = 0; i < 4; i++) {
-        printf("    Answer %zu: %s (Length %zu)\n", i, q->answ[i], q->answLen[i]);
+        printf("[ INFO ]     Answer %zu: %s (Length %zu)\n", i, q->answ[i], q->answLen[i]);
     }
 
-    printf("  Correct Answer Index: %zu\n", q->correctAnsw);
+    printf("[ INFO ]   Correct Answer Index: %zu\n", q->correctAnsw);
 }
 
 /*
@@ -226,16 +227,33 @@ void printQuestion(Question* q) {
 */
 void printGameState(GameState* gs) {
 
-    printf("GameState:\n");
-    printf("  prizeSecured: %zu\n", gs->prizeSecured);
-    printf("  prizeCur: %zu\n", gs->prizeCur);
+    printf("[ INFO ] GameState:\n");
+    printf("[ INFO ]   prizeSecured: %zu\n", gs->prizeSecured);
+    printf("[ INFO ]   prizeCur: %zu\n", gs->prizeCur);
 
     if (gs->questionsFile != NULL) {
-        printf("  questionsFile: %p\n", (void*)gs->questionsFile);
+        printf("[ INFO ]   questionsFile: %p\n", (void*)gs->questionsFile);
     } else {
-        printf("  questionsFile: NULL\n");
+        printf("[ INFO ]   questionsFile: NULL\n");
     }
 
     printQuestion(&gs->question);
     printLifelines(&gs->lifelines);
+}
+
+/*
+*   freeDecodedQuestion
+*       frees mallocd fields of Question and Lifelines structure after it was decoded,
+*       obligatory after every use of fDecodeQuestion
+*
+*   arguments:
+*       q - a reference to a Question structure
+*       ll - a reference to a Lifelines structure
+*
+*/
+void freeDecodedQuestion(Question* q, Lifelines* ll){
+    free(q->strContent);
+    for(size_t i = 0; i < 4; ++i)
+        free(q->answ[i]);
+    free(ll->phoneFriendContent);
 }
