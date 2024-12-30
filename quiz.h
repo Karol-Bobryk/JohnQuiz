@@ -13,8 +13,8 @@ typedef struct {
     bool isAudienceHelpUsed;
     bool isPhoneFriendUsed;
 
-    char* audienceHelpContent;
-    size_t audienceHelpContentLen;
+    char* phoneFriendContent;
+    size_t phoneFriendContentLen;
 
 } Lifelines;
 
@@ -39,6 +39,8 @@ typedef struct {
 typedef struct {
     size_t prizeSecured;
     size_t prizeCur;
+
+    FILE *questionsFile;
 
     Question question;
     Lifelines lifelines;
