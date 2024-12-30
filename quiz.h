@@ -20,7 +20,7 @@ typedef struct {
 
 /*
 *   Every question entry in a file should look like this:
-*   <Question content>:<Answer 0>:<Answer 1>:<Answer 2>:<Answer 3>:<Correct answer index>:<Audience help content>\n
+*   <Question content>:<Answer 0>:<Answer 1>:<Answer 2>:<Answer 3>:<Correct answer index>:<Phone friend content>\n
 */
 
 typedef struct {
