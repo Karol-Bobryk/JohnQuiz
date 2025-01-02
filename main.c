@@ -4,8 +4,7 @@ int main(){
 
     GameState* gs = GameStateInit();
 
-    fDecodeQuestion(gs->questionsFile, &(gs->question), &(gs->lifelines));
-    printGameState(gs);
+    fAppendQuestion(gs->questionsFile);
 
     GameStateFree(gs);
     return 0;

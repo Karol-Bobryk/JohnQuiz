@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 // Amount of questions is fixed to 15
 #ifndef QUIZ_H
@@ -51,14 +52,18 @@ GameState* GameStateInit();
 
 void GameStateFree(GameState*);
 
-size_t fGetSegLen(FILE *);
+size_t fGetSegLen(FILE*);
 
 void printLifelines(Lifelines*);
 
-void printQuestion(Question *);
+void printQuestion(Question*);
 
-void printGameState(GameState *);
+void printGameState(GameState*);
 
 int fDecodeQuestion(FILE*, Question*, Lifelines*);
 
 void freeDecodedQuestion(Question*, Lifelines*);
+
+int fAppendQuestion(FILE*);
+
+void strTrimNewline(char*);

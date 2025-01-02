@@ -54,7 +54,7 @@ GameState* GameStateInit(){
 
     gs->questionsFile = fopen(DEFAULT_FILE, "a+");
     if(gs->questionsFile == NULL){
-        fprintf(stderr, "[ ERROR ] Cannot open %s", DEFAULT_FILE);
+        fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
         exit(EXIT_FAILURE);
     }
 
@@ -256,4 +256,92 @@ void freeDecodedQuestion(Question* q, Lifelines* ll){
     for(size_t i = 0; i < 4; ++i)
         free(q->answ[i]);
     free(ll->phoneFriendContent);
+}
+
+#define MAX_QUESTION_SIZE 256
+int fAppendQuestion(FILE* f){
+
+    char sBuf[MAX_QUESTION_SIZE];
+    while(true){
+
+        printf("Provide question content: ");
+        if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
+            printf("\nQuestion cannot be longer than %d, please try again\n", MAX_QUESTION_SIZE - 1);
+            continue;
+        }
+        strTrimNewline(sBuf);
+
+        if((fputs(sBuf, f) < 0) || (fputc(':', f) < 0)){
+            fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+            return -1;
+        }
+        break;
+    }
+
+    for(size_t i = 0; i < 4; ++i){
+        while(true){
+
+            printf("Provide answer %zu content: ", i);
+            if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
+                printf("\nAnswer %zu cannot be longer than %d, please try again\n", i, MAX_QUESTION_SIZE - 1);
+                continue;
+            }
+            strTrimNewline(sBuf);
+
+            if((fputs(sBuf, f) < 0) || (fputc(':', f) < 0)){
+                fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+                return -1;
+            }
+            break;
+        }
+    }
+
+   while(true){
+
+        size_t corAnsw;
+
+        printf("Provide correct answer index: ");
+        if((scanf("%d", &corAnsw) != 1)){
+            printf("\nCorrect answer index has to be an integer\n");
+            getchar();
+            continue;
+        }
+
+        if(corAnsw < 0 || corAnsw > 3){
+            printf("\nPlease, provide the correct index range <0,3>\n");
+            continue;
+        }
+        getchar();
+
+        if(fprintf(f, "%d:", corAnsw) < 0){
+            fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+            return -1;
+        }
+        break;
+    }
+
+    while(true){
+
+        printf("Provide phone friend lifeline content: ");
+        if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
+            printf("\nPhone friend lifeline content cannot be longer than %d, please try again\n", MAX_QUESTION_SIZE - 1);
+            continue;
+        }
+
+        if(fputs(sBuf, f) < 0){
+            fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+            return -1;
+        }
+        break;
+    }
+
+    return 0;
+}
+
+void strTrimNewline(char* sBuf){
+
+    size_t len = strlen(sBuf);
+    if (len > 0 && sBuf[len - 1] == '\n') {
+        sBuf[len - 1] = '\0';
+    }
 }
