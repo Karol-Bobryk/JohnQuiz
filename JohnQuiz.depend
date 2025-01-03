@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1735913660 source:c:\users\hixid\desktop\johnquiz\main.c
+	"quiz.h"
+
+1735913660 c:\users\hixid\desktop\johnquiz\quiz.h
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+
+1735913660 source:c:\users\hixid\desktop\johnquiz\quiz.c
+	"quiz.h"
+
