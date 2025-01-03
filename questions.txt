@@ -1,2 +1,19 @@
-The quick brown fox:jumps over the lazy dog:is still loving you:kicking its can all over the place:flies where eagles dare:0:Poor dog
-wafwafa:wafwa:wafwa:fwaf:waf:2:amofwaof
+Co oznacza skrot HTML?:HyperText Markup Language:Highlighted Text Markup Language:Hypothetical Text Marking Language: HyperText Machine Language:0:HTML uzywany jest do tworzenia stron internetowych
+Jaki znak uzywany jest do komentowania kodu w jezyku C?:#:--:<!--://:3:Wydaje mi sie, ze # uzywany jest w pythonie a w HTML...
+Ktory typ jest uzywany do przechowywania wartosci prawda/falsz:int:bool:size_t:float:1:Pamietam, ze float oraz int byl uzywany do przechowywania liczb.
+Kto stworzyl system operacyjny Linux?:Richard Stallman:Bill Gates:Linus Tech Tips:Linus Torvalds:3:Jestem pewny ze nazwa systemu operacyjnego pochodzi od imienia jego tworcy.
+Ktory z wymienionych Frameworkow sluzy do programownia w PHP?:Node.js:Laravel:Django:Angular:1:Django zdecydowanie odpada, bo sluzy on do pythona a o ile mnie pamiec nie myli to Node.js uzywany jest w JavaScript
+Co to rekursja (rekurencja)?:Kiedy program importuje biblioteki:Kiedy program wykonuje petle:Kiedy funkcja wywoluje sama siebie:Kiedy funkcja zwraca typ inny niz okreslono:2:Hmm... wydaje mi sie ze bylo to powiazane z wielokrotnym wykonywaniem tego samego z mala zmiana.
+Co to jest "Git"?:System Kontroli Wersji:Srodowisko programownia w JAVA:Kompilator jezyka COBOL:Jezyk porgramowania:0:Jestem pewny ze Git jest wykorzystywany do wspolnej pracy nad projektem
+Ktore z wymienionych pojec jest jednym z paradygmatow programownia?:Przeciazenie:Polimorfizm:Iteracja:Refaktoryzacja:1:Jestem pewny ze poprawna odpowiedzia jest Polimorfizm.
+Ktory algorytm uzywany jest do sortowania danych?:BFS:Dijkstra:QuickSort:RSA:2:Mysle ze poprawna odpowiedzia bedzie Quicksort.
+Co oznacza litera "n" w skrocie "nvim":newvim:nodevim:nicervim:neovim:3:Jestem pewny ze odpowiedz to neovim.
+Kto napisal ksiazke "The C programming Language":Jane Jacobs:Dennis Ritchie:Steven Levy:Nicholas G. Carr:1: Moim zdaniem byl to Dennis Ritchie
+Jak inaczej nazywamy ciag zaburzajacy w kryptografi?:Salt:Pepper:Spice:Seed:0:Na pewno byl to rodzaj przyprawy tylko nie pamietam czy sol czy pieprz...
+Ktore z pojec opisuje sytuacje gdy dwie zmienne wskazuja na ta sama lokalizacje pamieci?:Przeciazenie:Przeladowanie:Nadpisanie:Aliasowanie:3:Mysle ze poprawna odpowiedz to aliasowanie
+Ktora z tych metod optymalizacji uzywana jest w kompilatorach do eleminowania zbednych instrukcji zwiazanych z operacjami na zmiennych?:Optymalizacja petli:Unrolling petli:Eleminacja martwych kodow:Transformacja CSE:2:Poprawna odpowiedz to eleminacja martwych kodow.
+Ktory z algorytmow uzywany jest do znalezienia najkrotszej sciezki w grafie z wagami dodatnimi?:Algorytm Djikstry:Algorytm Floyda-Warshalla:Algorytm Bellmana-Forda:Algorytm A*:0:Poprawna odpowiedz to algorytm Djikstry
+
+
+
+
