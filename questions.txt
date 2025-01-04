@@ -13,7 +13,3 @@ Jak inaczej nazywamy ciag zaburzajacy w kryptografi?:Salt:Pepper:Spice:Seed:0:Na
 Ktore z pojec opisuje sytuacje gdy dwie zmienne wskazuja na ta sama lokalizacje pamieci?:Przeciazenie:Przeladowanie:Nadpisanie:Aliasowanie:3:Mysle ze poprawna odpowiedz to aliasowanie
 Ktora z tych metod optymalizacji uzywana jest w kompilatorach do eleminowania zbednych instrukcji zwiazanych z operacjami na zmiennych?:Optymalizacja petli:Unrolling petli:Eleminacja martwych kodow:Transformacja CSE:2:Poprawna odpowiedz to eleminacja martwych kodow.
 Ktory z algorytmow uzywany jest do znalezienia najkrotszej sciezki w grafie z wagami dodatnimi?:Algorytm Djikstry:Algorytm Floyda-Warshalla:Algorytm Bellmana-Forda:Algorytm A*:0:Poprawna odpowiedz to algorytm Djikstry
-
-
-
-
