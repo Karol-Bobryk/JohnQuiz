@@ -42,6 +42,7 @@ typedef struct {
     size_t prizeCur;
 
     FILE *questionsFile;
+    size_t questionsFileLineCount;
 
     Question question;
     Lifelines lifelines;
@@ -67,3 +68,5 @@ void freeDecodedQuestion(Question*, Lifelines*);
 int fAppendQuestion(FILE*);
 
 void strTrimNewline(char*);
+
+size_t fCountLines(FILE*);

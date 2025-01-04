@@ -5,6 +5,8 @@
 
 #define DEFAULT_FILE "questions.txt"
 
+#define BUFFER_SIZE 1024 // size of buffer for count lines in a file
+
 const size_t PRIZES[15] = {
         100,
         200,
@@ -57,7 +59,7 @@ GameState* GameStateInit(){
         fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
         exit(EXIT_FAILURE);
     }
-
+    gs->questionsFileLineCount = fCountLines(gs->questionsFile);
     return gs;
 }
 
@@ -344,4 +346,29 @@ void strTrimNewline(char* sBuf){
     if (len > 0 && sBuf[len - 1] == '\n') {
         sBuf[len - 1] = '\0';
     }
+}
+
+/*
+*   fCountLines
+*       counts the amount of newlines (\n) in the file we're using to read questions from.
+*
+*   arguments:
+*       file - text file passed as input (presumably with questions inside idk i only work here)
+*
+*   return value:
+*       countNewLines - the number of newlines in the file specified above
+*/
+
+size_t fCountLines(FILE* file){
+    char buffer[BUFFER_SIZE];
+    rewind(file);
+    size_t countNewLines = 0;
+
+    while(!feof(file)){
+        size_t currentBuffer = fread(buffer, sizeof(char), BUFFER_SIZE, file);
+        for(size_t i = 0; i < currentBuffer; i++){
+            if (buffer[i] == '\n') ++countNewLines;
+        }
+    }
+    return countNewLines;
 }
