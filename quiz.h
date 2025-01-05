@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 
 // Amount of questions is fixed to 15
 #ifndef QUIZ_H
@@ -76,3 +77,7 @@ size_t fCountLines(FILE*);
 int fGetRandomQuestion(GameState*);
 
 size_t getRandomQuestionId(size_t [15], size_t, size_t);
+
+int getWindowWidth();
+
+int printTitle();

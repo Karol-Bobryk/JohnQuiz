@@ -4,6 +4,8 @@ int main(){
 
     GameState* gs = GameStateInit();
 
+    printTitle();
+
     fGetRandomQuestion(gs);
 
     printGameState(gs);
@@ -11,5 +13,6 @@ int main(){
     freeDecodedQuestion(&(gs->question), &(gs->question));
 
     GameStateFree(gs);
+
     return 0;
 }

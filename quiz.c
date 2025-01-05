@@ -429,3 +429,62 @@ size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount)
             return qId;
     }
 }
+
+/*
+*   getWindowWidth
+*       calculates the number of columns in the console window
+*
+*   return value:
+*       returns number of columns in the console window
+*
+*/
+int getWindowWidth(){
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    if(!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)){
+        return -1;
+    }
+
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+}
+
+/*
+*   printTitle
+*       prints a centred title from the title.txt file
+*
+*   return value:
+*       0 - successful execution
+*       -1 - failed execution
+*/
+int printTitle(){
+    int windowWidth = getWindowWidth();
+
+    if(windowWidth == -1){
+        printf("Failed to get window width");
+        return -1;
+    }
+
+    FILE* title = fopen("title.txt", "r");
+    if(title == NULL){
+        printf("Failed to open file");
+        return -1;
+    }
+
+    printf("\n");
+    char line[1024];
+    while(fgets(line, sizeof(line), title)){
+        strTrimNewline(line);
+
+        int padding = (windowWidth - strlen(line)) / 2;
+
+        for(size_t i = 0; i < padding; ++i){
+            printf(" ");
+        }
+
+        printf("%s\n", line);
+    }
+
+    return 0;
+}
+
+
