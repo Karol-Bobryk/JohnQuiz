@@ -484,6 +484,8 @@ int printTitle(){
         printf("%s\n", line);
     }
 
+    fclose(title);
+
     return 0;
 }
 
