@@ -59,7 +59,13 @@ GameState* GameStateInit(){
         fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
         exit(EXIT_FAILURE);
     }
+
     gs->questionsFileLineCount = fCountLines(gs->questionsFile);
+
+    for (size_t i = 0; i < 15; ++i) {
+        gs->questionIdBlacklist[i] = 0;
+    }
+
     return gs;
 }
 
@@ -358,7 +364,6 @@ void strTrimNewline(char* sBuf){
 *   return value:
 *       countNewLines - the number of newlines in the file specified above
 */
-
 size_t fCountLines(FILE* file){
     char buffer[BUFFER_SIZE];
     rewind(file);
@@ -371,4 +376,56 @@ size_t fCountLines(FILE* file){
         }
     }
     return countNewLines;
+}
+
+/*
+*   fGetRandomQuestion
+*       gets a random question from the question file and puts it inside the Question structure
+*
+*   arguments:
+*       gs - current GameState structure
+*
+*   return value:
+*       returns zero for a successful execution
+*/
+#define QUESTION_BUFFER_SIZE (MAX_QUESTION_SIZE * 6 + 2 + 1)
+int fGetRandomQuestion(GameState* gs){
+
+    srand(time(NULL));
+
+    size_t qId = getRandomQuestionId(gs->questionIdBlacklist, gs->question.curId + 1, gs->questionsFileLineCount);
+
+    rewind(gs->questionsFile);
+
+    char buf[QUESTION_BUFFER_SIZE];
+    // this loop skips entire lines up until it is at the beginning of the desired line
+    for(size_t i = 0; i < qId; ++i){
+        fgets(buf , QUESTION_BUFFER_SIZE, gs->questionsFile);
+    }
+
+    fDecodeQuestion(gs->questionsFile, &(gs->question), &(gs->lifelines));
+
+    ++(gs->question.curId);
+
+    return 0;
+}
+
+size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount){
+
+    size_t qId;
+    bool isBlacklisted = false;
+    while(true){
+        qId = (rand() % lineCount);
+        isBlacklisted = false;
+
+        for(size_t i = 0; i < (curId + 1); ++i){
+            if (blacklist[i] == qId){
+                isBlacklisted = true;
+                break;
+            }
+        }
+
+        if(!isBlacklisted)
+            return qId;
+    }
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 
 // Amount of questions is fixed to 15
 #ifndef QUIZ_H
@@ -43,6 +44,7 @@ typedef struct {
 
     FILE *questionsFile;
     size_t questionsFileLineCount;
+    size_t questionIdBlacklist[15];
 
     Question question;
     Lifelines lifelines;
@@ -70,3 +72,7 @@ int fAppendQuestion(FILE*);
 void strTrimNewline(char*);
 
 size_t fCountLines(FILE*);
+
+int fGetRandomQuestion(GameState*);
+
+size_t getRandomQuestionId(size_t [15], size_t, size_t);
