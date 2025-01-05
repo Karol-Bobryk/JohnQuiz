@@ -464,15 +464,15 @@ int printTitle(){
         return -1;
     }
 
-    FILE* title = fopen("title.txt", "r");
-    if(title == NULL){
+    FILE* titleFile = fopen("title.txt", "r");
+    if(titleFile == NULL){
         printf("Failed to open file");
         return -1;
     }
 
     printf("\n");
     char line[1024];
-    while(fgets(line, sizeof(line), title)){
+    while(fgets(line, sizeof(line), titleFile)){
         strTrimNewline(line);
 
         int padding = (windowWidth - strlen(line)) / 2;
@@ -484,9 +484,52 @@ int printTitle(){
         printf("%s\n", line);
     }
 
-    fclose(title);
+    fclose(titleFile);
 
     return 0;
+}
+
+void drawMenu(){
+    const char* menuItems[4] = {
+        "Graj",
+        "Dodaj pytanie",
+        "O grze",
+        "Wyjscie"
+    };
+
+    int padding = 0;
+    int windowWidth = getWindowWidth();
+
+    printf("\n\n");
+    for(size_t i = 0; i < 4; ++i){
+        padding = (windowWidth - strlen(menuItems[i])) / 2;
+
+        for(size_t i = 0; i < padding; ++i){
+            printf(" ");
+        }
+
+        printf("%d. %s\n", (i+1), menuItems[i]);
+    }
+
+    int selectedOption = 0;
+    scanf("%d", &selectedOption);
+
+    switch(selectedOption){
+    case 1:
+        printf("placeholder");
+        break;
+    case 2:
+        printf("placeholder");
+        break;
+    case 3:
+        printf("placeholder");
+        break;
+    case 4:
+        printf("placeholder");
+        break;
+    default:
+        printf("You have to provide a valid number");
+    }
 }
 
 

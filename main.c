@@ -6,11 +6,13 @@ int main(){
 
     printTitle();
 
-    fGetRandomQuestion(gs);
+    drawMenu();
 
-    printGameState(gs);
-
-    freeDecodedQuestion(&(gs->question), &(gs->question));
+//    fGetRandomQuestion(gs);
+//
+//    printGameState(gs);
+//
+//    freeDecodedQuestion(&(gs->question), &(gs->question));
 
     GameStateFree(gs);
 

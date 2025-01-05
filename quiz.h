@@ -81,3 +81,5 @@ size_t getRandomQuestionId(size_t [15], size_t, size_t);
 int getWindowWidth();
 
 int printTitle();
+
+void drawMenu();
