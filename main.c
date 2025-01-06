@@ -1,11 +1,11 @@
 #include "quiz.h"
+#include "gui.h"
 
 int main(){
 
     GameState* gs = GameStateInit();
 
-    printTitle();
-
+    drawTitle();
     drawMenu();
 
 //    fGetRandomQuestion(gs);
