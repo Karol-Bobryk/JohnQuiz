@@ -1,7 +1,9 @@
 #include "quiz.h"
 
 // this define below is here due to the mingw gcc problems with %zu specifier
+#ifdef __MINGW32__
 #define printf __mingw_printf
+#endif
 
 #define DEFAULT_FILE "questions.txt"
 
@@ -430,5 +432,39 @@ size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount)
     }
 }
 
+int mainGameLoop(GameState *gs){
 
+    char ch;
+
+    fGetRandomQuestion(gs);
+    SimpleGuiSelectedItem selectedItem = AnsA;
+    const size_t enumSize = 7;
+
+    printSimpleGameGui(gs, selectedItem);
+
+    while(1){
+
+        ch = getch();
+
+        switch (ch) {
+            case 'w':
+                selectedItem = (selectedItem == 0) ? enumSize - 1 : selectedItem - 1;
+                printSimpleGameGui(gs, selectedItem);
+                break;
+            case 's':
+                selectedItem = (selectedItem + 1) % enumSize;
+                printSimpleGameGui(gs, selectedItem);
+                break;
+            case 13: // decimal for enter
+                // TODO: Add selecting logic
+                printSimpleGameGui(gs, selectedItem);
+                break;
+
+        }
+    }
+
+    freeDecodedQuestion(&(gs->question), &(gs->lifelines));
+
+    return 0;
+}
 
