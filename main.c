@@ -12,11 +12,6 @@ int main(){
         drawMenu();
         getMenuChoice(gs);
     }
-//    fGetRandomQuestion(gs);
-//
-//    printGameState(gs);
-//
-//    freeDecodedQuestion(&(gs->question), &(gs->question));
 
     GameStateFree(gs);
 
