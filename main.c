@@ -4,10 +4,14 @@
 int main(){
 
     GameState* gs = GameStateInit();
-
-    drawTitle();
-    drawMenu();
-
+    while(true){
+        system("cls");
+        if(drawTitle() != 0){
+            fprintf(stderr,"[ ERROR ] logo render failed\n");
+        }
+        drawMenu();
+        getMenuChoice(gs);
+    }
 //    fGetRandomQuestion(gs);
 //
 //    printGameState(gs);

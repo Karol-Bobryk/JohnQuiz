@@ -9,3 +9,7 @@ int drawTitle();
 
 void drawMenu();
 
+void showAboutGameScreen();
+
+void getMenuChoice();
+

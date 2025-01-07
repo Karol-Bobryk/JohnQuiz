@@ -1,4 +1,5 @@
 #include "gui.h"
+#include "quiz.h"
 
 int titlePadding = 0;
 
@@ -28,17 +29,18 @@ int getWindowWidth(){
 *       0 - successful execution
 *       -1 - failed execution
 */
+#define TITLE_FILE "title.txt"
 int drawTitle(){
     int windowWidth = getWindowWidth();
 
     if(windowWidth == -1){
-        printf("Failed to get window width");
+        fprintf(stderr,"[ ERROR ] Failed to get window width\n");
         return -1;
     }
 
-    FILE* titleFile = fopen("title.txt", "r");
+    FILE* titleFile = fopen(TITLE_FILE, "r");
     if(titleFile == NULL){
-        printf("Failed to open file");
+        fprintf(stderr,"[ ERROR ] Failed to open title file\n");
         return -1;
     }
 
@@ -80,8 +82,6 @@ void drawMenu(){
         "Wyjscie"
     };
 
-    int windowWidth = getWindowWidth();
-
     for(size_t i = 0; i < 4; ++i){
         for(size_t i = 0; i < titlePadding; ++i){
             printf(" ");
@@ -89,32 +89,33 @@ void drawMenu(){
 
         printf("%d. %s\n", (i+1), menuItems[i]);
     }
-
-    getMenuChoice();
 }
 
 /*
 *   getMenuChoice
 *       handles user input when dealing with the menu
 */
-void getMenuChoice(){
-    int selectedOption = getche();
+void getMenuChoice(GameState *gs){
+    char selectedOption = getch();
 
     switch(selectedOption){
-    case 49: // ASCII value of "1"
+    case '1':
         printf("placeholder");
+        getch();
         break;
-    case 50: // ASCII value of "2"
+    case '2':
         printf("placeholder");
+        getch();
         break;
-    case 51: // ASCII value of "3"
+    case '3':
         showAboutGameScreen();
         break;
-    case 52: // ASCII value of "4"
-        printf("placeholder");
-        break;
+    case '4':
+        GameStateFree(gs);
+        exit(EXIT_SUCCESS);
     default:
         printf("You have to provide a valid number");
+        getch();
     }
 }
 
@@ -131,18 +132,15 @@ void showAboutGameScreen(){
 
     printf("Wcisnij ESCAPE aby powrocic do menu.");
 
-    int buttonPressed = 0;
+    char buttonPressed = 0;
 
     while(1){
-        buttonPressed = getche();
+        buttonPressed = getch();
         if(buttonPressed != 27){
-            printf("\nInvalid button pressed");
+            continue;
         }
-        else{
-            system("cls");
-            drawTitle();
-            drawMenu();
-        }
+
+        return;
     }
 
 }
