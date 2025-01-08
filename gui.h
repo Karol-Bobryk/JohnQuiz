@@ -31,6 +31,4 @@ void getMenuChoice(GameState*);
 
 void printLLAudHelp(size_t);
 
-void printSimpleGameGui(GameState*, SimpleGuiSelectedItem, bool);
-
 #endif

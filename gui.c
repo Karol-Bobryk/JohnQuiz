@@ -156,10 +156,6 @@ void showAboutGameScreen(){
 #define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
 #define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
 
-void printLLAudHelp(size_t correctAns){
-    printf("\n%sNasza kochana widownia mowi ze %zu.%s\n" ,ANSI_GREEN_TEXT, correctAns, ANSI_WHITE_TEXT);
-}
-
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
     system("cls");
@@ -189,6 +185,8 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     }
     printf("\n");
 
+    // lifelines options pompa
+
     if(selectedItem == LL50_50)
             printf(ANSI_BLUE_BACKGROUND);
     printf("1.");
@@ -207,12 +205,16 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf(gs->lifelines.isPhoneFriendUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Telefon do przyjaciela ");
     printf(ANSI_BLACK_BACKGROUND);
 
-    // lifelines:
+    // lifeline showcasington:
 
     if(gs->lifelines.isAudienceHelpInUse == true){
         printf("\n%sNasza widownia uznala ze uwaga uwaga: %c%s",ANSI_GREEN_TEXT, 'A'+gs->question.correctAnsw, ANSI_WHITE_TEXT);
     }
 
+    if(gs->lifelines.isPhoneFriendInUse == true){
+        printf("\n%s%s%s",
+               ANSI_GREEN_TEXT, gs->lifelines.phoneFriendContent, ANSI_WHITE_TEXT);
+    }
 
     printf("\n\n");
     printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);

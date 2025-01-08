@@ -518,6 +518,12 @@ bool handleQuestionInput(GameState* gs){
                         gs->lifelines.isAudienceHelpUsed = true;
                         printSimpleGameGui(gs, selectedItem, false);
                     }
+
+                    if(selectedItem == LLPhone && !gs->lifelines.isPhoneFriendUsed){
+                        gs->lifelines.isPhoneFriendInUse = true;
+                        gs->lifelines.isPhoneFriendUsed = true;
+                        printSimpleGameGui(gs, selectedItem, false);
+                    }
                     // TODO: add lifelines logic
                     break;
             }
