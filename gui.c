@@ -144,6 +144,7 @@ void showAboutGameScreen(){
     }
 
 }
+
 #define ANSI_BLACK_BACKGROUND "\x1b[40m"
 #define ANSI_BLUE_BACKGROUND "\x1b[44m"
 #define ANSI_BLUE_TEXT "\x1b[34m"
@@ -154,6 +155,11 @@ void showAboutGameScreen(){
 // this one and the one below have %s inside
 #define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
 #define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
+
+void printLLAudHelp(size_t correctAns){
+    printf("\n%sNasza kochana widownia mowi ze %zu.%s\n" ,ANSI_GREEN_TEXT, correctAns, ANSI_WHITE_TEXT);
+}
+
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
     system("cls");
@@ -162,11 +168,12 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
     printf("\t");
     printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
-    if(gs->question.curId != 14){
+    if(gs->question.curId != 15){ // :D
         printf("\t");
         printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
     }
     printf("\n");
+    printf("%zu", gs->question.curId);
     printf("\n");
     printf("%s\n",gs->question.strContent);
     printf("\n");
@@ -199,6 +206,14 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("3.");
     printf(gs->lifelines.isPhoneFriendUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Telefon do przyjaciela ");
     printf(ANSI_BLACK_BACKGROUND);
+
+    // lifelines:
+
+    if(gs->lifelines.isAudienceHelpInUse == true){
+        printf("\n%sNasza widownia uznala ze uwaga uwaga: %c%s",ANSI_GREEN_TEXT, 'A'+gs->question.correctAnsw, ANSI_WHITE_TEXT);
+    }
+
+
     printf("\n\n");
     printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
     printf("\n");

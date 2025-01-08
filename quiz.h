@@ -13,6 +13,10 @@
 const size_t PRIZES[15]; // Amount of questions is fixed to 15
 
 typedef struct {
+    bool is50_50InUse;
+    bool isAudienceHelpInUse;
+    bool isPhoneFriendInUse;
+
     bool is50_50Used;
     bool isAudienceHelpUsed;
     bool isPhoneFriendUsed;
