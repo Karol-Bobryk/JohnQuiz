@@ -147,14 +147,21 @@ void showAboutGameScreen(){
 
 #define ANSI_BLACK_BACKGROUND "\x1b[40m"
 #define ANSI_BLUE_BACKGROUND "\x1b[44m"
+
 #define ANSI_BLUE_TEXT "\x1b[34m"
 #define ANSI_WHITE_TEXT "\x1b[37m"
 #define ANSI_GREEN_TEXT "\x1b[32m"
+#define ANSI_BLACK_TEXT "\x1b[30m"
+
 #define ANSI_RED_BACKGROUND "\x1b[41m"
 #define ANSI_GREEN_BACKGROUND "\x1b[42m"
 // this one and the one below have %s inside
 #define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
 #define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
+
+// good luck writing docs for this
+
+// @hightower
 
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
@@ -169,19 +176,27 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
         printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
     }
     printf("\n");
-    printf("%zu", gs->question.curId);
     printf("\n");
     printf("%s\n",gs->question.strContent);
     printf("\n");
 
     for(size_t i = 0; i < 4; ++i){
 
+
         if(isConfirmed)
             printf((i == gs->question.correctAnsw) ? ANSI_GREEN_BACKGROUND : ANSI_RED_BACKGROUND);
         else if(selectedItem == i)
             printf(ANSI_BLUE_BACKGROUND);
 
-        printf("\t%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
+        bool hideText= (gs->lifelines.is50_50InUse
+           && i != gs->lifelines.enabledAnswers[0]
+           && i != gs->lifelines.enabledAnswers[1]);
+
+        if(hideText){
+           printf("\t%c. %s\n", 'A' + i,ANSI_BLACK_BACKGROUND);
+        } else {
+            printf("\t%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
+        }
     }
     printf("\n");
 
@@ -205,7 +220,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf(gs->lifelines.isPhoneFriendUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Telefon do przyjaciela ");
     printf(ANSI_BLACK_BACKGROUND);
 
-    // lifeline showcasington:
+    // lifeline printington:
 
     if(gs->lifelines.isAudienceHelpInUse == true){
         printf("\n%sNasza widownia uznala ze uwaga uwaga: %c%s",ANSI_GREEN_TEXT, 'A'+gs->question.correctAnsw, ANSI_WHITE_TEXT);

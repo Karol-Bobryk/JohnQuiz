@@ -61,6 +61,9 @@ void GameStateReset(GameState *gs){
     gs->lifelines.isAudienceHelpInUse = false;
     gs->lifelines.isPhoneFriendInUse = false;
 
+    gs->lifelines.enabledAnswers[0] = 0;
+    gs->lifelines.enabledAnswers[1] = 0;
+
     gs->lifelines.is50_50Used = false;
     gs->lifelines.isAudienceHelpUsed = false;
     gs->lifelines.isPhoneFriendUsed = false;
@@ -480,6 +483,7 @@ int mainGameLoop(GameState *gs){
     return 0;
 }
 
+#define ENABLED gs->lifelines.enabledAnswers
 bool handleQuestionInput(GameState* gs){
 
     char ch;
@@ -508,6 +512,8 @@ bool handleQuestionInput(GameState* gs){
                 case 13: // decimal for enter
 
                     if(selectedItem >= AnsA && selectedItem <= AnsD){
+                        if (selectedItem != ENABLED[0] && selectedItem != ENABLED[1] && gs->lifelines.is50_50InUse)
+                            continue;
                         printSimpleGameGui(gs, selectedItem, true);
                         printf("\n\t Kliknij aby przejsc dalej.");
                         getch();
@@ -524,6 +530,17 @@ bool handleQuestionInput(GameState* gs){
                         gs->lifelines.isPhoneFriendUsed = true;
                         printSimpleGameGui(gs, selectedItem, false);
                     }
+
+                    if(selectedItem == LL50_50 && !gs->lifelines.is50_50Used){
+                        gs->lifelines.is50_50InUse = true;
+                        gs->lifelines.is50_50Used = true;
+
+                        ENABLED[0] = gs->question.correctAnsw;
+                        ENABLED[1] = ((rand() % 3 )+gs->question.correctAnsw + 1)%4;
+
+                        printSimpleGameGui(gs, selectedItem, false);
+                    }
+
                     // TODO: add lifelines logic
                     break;
             }
