@@ -1,7 +1,23 @@
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef GUI_H
+#define GUI_H
+
 #include <windows.h>
-#include <conio.h>
+#include <stdbool.h>
+
+// This is a forward declaration of GameState Structure
+struct GameState;
+typedef struct GameState GameState;
+
+typedef enum {
+    AnsA,
+    AnsB,
+    AnsC,
+    AnsD,
+
+    LL50_50,
+    LLAudHelp,
+    LLPhone
+} SimpleGuiSelectedItem;
 
 int getWindowWidth();
 
@@ -11,5 +27,8 @@ void drawMenu();
 
 void showAboutGameScreen();
 
-void getMenuChoice();
+void getMenuChoice(GameState*);
 
+void printSimpleGameGui(GameState*, SimpleGuiSelectedItem, bool);
+
+#endif

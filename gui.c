@@ -1,6 +1,5 @@
 #include "gui.h"
 #include "quiz.h"
-
 int titlePadding = 0;
 
 /*
@@ -99,10 +98,11 @@ void getMenuChoice(GameState *gs){
     char selectedOption = getch();
 
     switch(selectedOption){
-    case '1':
-        printf("placeholder");
-        getch();
+    case '1':{
+        mainGameLoop(gs);
+        GameStateReset(gs);
         break;
+    }
     case '2':
         printf("placeholder");
         getch();
@@ -144,4 +144,63 @@ void showAboutGameScreen(){
     }
 
 }
+#define ANSI_BLACK_BACKGROUND "\x1b[40m"
+#define ANSI_BLUE_BACKGROUND "\x1b[44m"
+#define ANSI_BLUE_TEXT "\x1b[34m"
+#define ANSI_WHITE_TEXT "\x1b[37m"
+#define ANSI_GREEN_TEXT "\x1b[32m"
+#define ANSI_RED_BACKGROUND "\x1b[41m"
+#define ANSI_GREEN_BACKGROUND "\x1b[42m"
+// this one and the one below have %s inside
+#define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
+#define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
+void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
+    system("cls");
+
+    printf("\n");
+    printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
+    printf("\t");
+    printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
+    if(gs->question.curId != 14){
+        printf("\t");
+        printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
+    }
+    printf("\n");
+    printf("\n");
+    printf("%s\n",gs->question.strContent);
+    printf("\n");
+
+    for(size_t i = 0; i < 4; ++i){
+
+        if(isConfirmed)
+            printf((i == gs->question.correctAnsw) ? ANSI_GREEN_BACKGROUND : ANSI_RED_BACKGROUND);
+        else if(selectedItem == i)
+            printf(ANSI_BLUE_BACKGROUND);
+
+        printf("\t%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
+    }
+    printf("\n");
+
+    if(selectedItem == LL50_50)
+            printf(ANSI_BLUE_BACKGROUND);
+    printf("1.");
+    printf(gs->lifelines.is50_50Used ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "50/50 ");
+    printf("\t");
+
+    if(selectedItem == LLAudHelp)
+            printf(ANSI_BLUE_BACKGROUND);
+    printf("2.");
+    printf(gs->lifelines.isAudienceHelpUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Pytanie do publicznosci ");
+    printf("\t");
+
+    if(selectedItem == LLPhone)
+            printf(ANSI_BLUE_BACKGROUND);
+    printf("3.");
+    printf(gs->lifelines.isPhoneFriendUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Telefon do przyjaciela ");
+    printf(ANSI_BLACK_BACKGROUND);
+    printf("\n\n");
+    printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
+    printf("\n");
+
+}

@@ -1,14 +1,16 @@
+#ifndef QUIZ_H
+#define QUIZ_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include <conio.h>
+#include "gui.h"
 
-// Amount of questions is fixed to 15
-#ifndef QUIZ_H
-#define QUIZ_H
-const size_t PRIZES[15];
-#endif
+
+const size_t PRIZES[15]; // Amount of questions is fixed to 15
 
 typedef struct {
     bool is50_50Used;
@@ -38,8 +40,9 @@ typedef struct {
 
 } Question;
 
-typedef struct {
+struct GameState{
     size_t prizeSecured;
+    size_t prizeNext;
     size_t prizeCur;
 
     FILE *questionsFile;
@@ -49,9 +52,13 @@ typedef struct {
     Question question;
     Lifelines lifelines;
 
-} GameState;
+};
+
+typedef struct GameState GameState;
 
 GameState* GameStateInit();
+
+void GameStateReset(GameState *);
 
 void GameStateFree(GameState*);
 
@@ -76,3 +83,9 @@ size_t fCountLines(FILE*);
 int fGetRandomQuestion(GameState*);
 
 size_t getRandomQuestionId(size_t [15], size_t, size_t);
+
+int mainGameLoop(GameState*);
+
+bool handleQuestionInput(GameState*);
+
+#endif

@@ -1,7 +1,9 @@
 #include "quiz.h"
 
 // this define below is here due to the mingw gcc problems with %zu specifier
+#ifdef __MINGW32__
 #define printf __mingw_printf
+#endif
 
 #define DEFAULT_FILE "questions.txt"
 
@@ -37,7 +39,21 @@ GameState* GameStateInit(){
 
     GameState* gs = malloc(sizeof(GameState));
 
-    gs->prizeCur = 0;
+    gs->questionsFile = fopen(DEFAULT_FILE, "a+");
+    if(gs->questionsFile == NULL){
+        fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
+        exit(EXIT_FAILURE);
+    }
+
+    GameStateReset(gs);
+
+    return gs;
+}
+
+void GameStateReset(GameState *gs){
+
+    gs->prizeCur = PRIZES[0];
+    gs->prizeNext = PRIZES[1];
     gs->prizeSecured = 0;
 
     // initialization of a Lifelines structure
@@ -54,19 +70,11 @@ GameState* GameStateInit(){
     gs->question.curId = 0;
     gs->question.strContentLen = 0;
 
-    gs->questionsFile = fopen(DEFAULT_FILE, "a+");
-    if(gs->questionsFile == NULL){
-        fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
-        exit(EXIT_FAILURE);
-    }
-
     gs->questionsFileLineCount = fCountLines(gs->questionsFile);
 
     for (size_t i = 0; i < 15; ++i) {
         gs->questionIdBlacklist[i] = 0;
     }
-
-    return gs;
 }
 
 /*
@@ -393,7 +401,7 @@ int fGetRandomQuestion(GameState* gs){
 
     srand(time(NULL));
 
-    size_t qId = getRandomQuestionId(gs->questionIdBlacklist, gs->question.curId + 1, gs->questionsFileLineCount);
+    size_t qId = getRandomQuestionId(gs->questionIdBlacklist, gs->question.curId, gs->questionsFileLineCount);
 
     rewind(gs->questionsFile);
 
@@ -414,21 +422,91 @@ size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount)
 
     size_t qId;
     bool isBlacklisted = false;
+
+    qId = (rand() % lineCount);
+
     while(true){
-        qId = (rand() % lineCount);
         isBlacklisted = false;
 
-        for(size_t i = 0; i < (curId + 1); ++i){
+        for(size_t i = 0; i < curId; ++i){
+
             if (blacklist[i] == qId){
+                qId = (qId + 1) % lineCount;
                 isBlacklisted = true;
                 break;
             }
-        }
 
-        if(!isBlacklisted)
+        }
+        if(!isBlacklisted){
+            blacklist[curId] = qId;
             return qId;
+        }
     }
 }
 
+int mainGameLoop(GameState *gs){
 
+    for(size_t i = 0; i < 15; ++i){
+
+        fGetRandomQuestion(gs);
+
+        if(i == 14){
+            gs->prizeCur = PRIZES[i];
+            gs->prizeNext = 0;
+        }
+        else{
+            gs->prizeCur = PRIZES[i];
+            gs->prizeNext = PRIZES[i + 1];
+        }
+
+        if(!handleQuestionInput(gs)){
+            return 0; // THIS IS WHERE LOSS IS PROCESSED
+        }
+
+        if(i == 4 || i == 9)
+            gs->prizeSecured = PRIZES[i];
+
+        freeDecodedQuestion(&(gs->question), &(gs->lifelines));
+    }
+
+    return 0;
+}
+
+bool handleQuestionInput(GameState* gs){
+
+    char ch;
+
+    SimpleGuiSelectedItem selectedItem = AnsA;
+    const size_t enumSize = 7;
+
+    printSimpleGameGui(gs, selectedItem, false);
+
+    while(1){
+            ch = getch();
+
+            switch (ch) {
+                case 'W':
+                case 'w':
+                    selectedItem = (selectedItem == 0) ? enumSize - 1 : selectedItem - 1;
+                    printSimpleGameGui(gs, selectedItem, false);
+                    break;
+
+                case 'S':
+                case 's':
+                    selectedItem = (selectedItem + 1) % enumSize;
+                    printSimpleGameGui(gs, selectedItem, false);
+                    break;
+
+                case 13: // decimal for enter
+                    if(selectedItem >= AnsA && selectedItem <= AnsD){
+                        printSimpleGameGui(gs, selectedItem, true);
+                        printf("\n\t Kliknij aby przejsc dalej.");
+                        getch();
+                        return gs->question.correctAnsw == selectedItem;
+                    }
+                    // TODO: add lifelines logic
+                    break;
+            }
+    }
+}
 
