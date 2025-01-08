@@ -98,7 +98,7 @@ void getMenuChoice(GameState *gs){
     char selectedOption = getch();
 
     switch(selectedOption){
-    case '1':{ // TODO: this is temp
+    case '1':{
         mainGameLoop(gs);
         break;
     }
@@ -147,20 +147,35 @@ void showAboutGameScreen(){
 #define ANSI_BLUE_BACKGROUND "\x1b[44m"
 #define ANSI_BLUE_TEXT "\x1b[34m"
 #define ANSI_WHITE_TEXT "\x1b[37m"
+#define ANSI_GREEN_TEXT "\x1b[32m"
+#define ANSI_RED_BACKGROUND "\x1b[41m"
+#define ANSI_GREEN_BACKGROUND "\x1b[42m"
 // this one and the one below have %s inside
 #define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
 #define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
-void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem){
+void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
     system("cls");
+
+    printf("\n");
+    printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
+    printf("\t");
+    printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
+    printf("\t");
+    printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
+    printf("\n");
     printf("\n");
     printf("%s\n",gs->question.strContent);
     printf("\n");
 
     for(size_t i = 0; i < 4; ++i){
-        if(selectedItem == i)
+
+        if(isConfirmed)
+            printf((i == gs->question.correctAnsw) ? ANSI_GREEN_BACKGROUND : ANSI_RED_BACKGROUND);
+        else if(selectedItem == i)
             printf(ANSI_BLUE_BACKGROUND);
-        printf("%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
+
+        printf("\t%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
     }
     printf("\n");
 

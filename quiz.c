@@ -39,7 +39,8 @@ GameState* GameStateInit(){
 
     GameState* gs = malloc(sizeof(GameState));
 
-    gs->prizeCur = 0;
+    gs->prizeCur = PRIZES[0];
+    gs->prizeNext = PRIZES[1];
     gs->prizeSecured = 0;
 
     // initialization of a Lifelines structure
@@ -412,7 +413,7 @@ int fGetRandomQuestion(GameState* gs){
     return 0;
 }
 
-size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount){
+size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount){ // TODO: THIS DOES NOT WORK FOR SOME REASON
 
     size_t qId;
     bool isBlacklisted = false;
@@ -434,37 +435,65 @@ size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount)
 
 int mainGameLoop(GameState *gs){
 
-    char ch;
+    for(size_t i = 0; i < 15; ++i){
 
-    fGetRandomQuestion(gs);
-    SimpleGuiSelectedItem selectedItem = AnsA;
-    const size_t enumSize = 7;
+        fGetRandomQuestion(gs);
 
-    printSimpleGameGui(gs, selectedItem);
-
-    while(1){
-
-        ch = getch();
-
-        switch (ch) {
-            case 'w':
-                selectedItem = (selectedItem == 0) ? enumSize - 1 : selectedItem - 1;
-                printSimpleGameGui(gs, selectedItem);
-                break;
-            case 's':
-                selectedItem = (selectedItem + 1) % enumSize;
-                printSimpleGameGui(gs, selectedItem);
-                break;
-            case 13: // decimal for enter
-                // TODO: Add selecting logic
-                printSimpleGameGui(gs, selectedItem);
-                break;
-
+        if(i == 14){
+            gs->prizeCur = PRIZES[i];
+            gs->prizeNext = 0;
         }
+        else{
+            gs->prizeCur = PRIZES[i];
+            gs->prizeNext = PRIZES[i + 1];
+        }
+
+        if(!handleQuestionInput(gs)){
+            return 0; // THIS IS WHERE LOSS IS PROCESSED
+        }
+
+        if(i == 4 || i ==9)
+            gs->prizeSecured = PRIZES[i];
+
+        freeDecodedQuestion(&(gs->question), &(gs->lifelines));
     }
-
-    freeDecodedQuestion(&(gs->question), &(gs->lifelines));
-
     return 0;
 }
 
+bool handleQuestionInput(GameState* gs){
+
+    char ch;
+
+    SimpleGuiSelectedItem selectedItem = AnsA;
+    const size_t enumSize = 7;
+
+    printSimpleGameGui(gs, selectedItem, false);
+
+    while(1){
+            ch = getch();
+
+            switch (ch) {
+                case 'W':
+                case 'w':
+                    selectedItem = (selectedItem == 0) ? enumSize - 1 : selectedItem - 1;
+                    printSimpleGameGui(gs, selectedItem, false);
+                    break;
+
+                case 'S':
+                case 's':
+                    selectedItem = (selectedItem + 1) % enumSize;
+                    printSimpleGameGui(gs, selectedItem, false);
+                    break;
+
+                case 13: // decimal for enter
+                    if(selectedItem >= AnsA && selectedItem <= AnsD){
+                        printSimpleGameGui(gs, selectedItem, true);
+                        printf("\n\t Kliknij aby przejsc dalej.");
+                        getch();
+                        return gs->question.correctAnsw == selectedItem;
+                    }
+                    // TODO: add lifelines logic
+                    break;
+            }
+    }
+}

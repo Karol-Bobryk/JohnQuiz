@@ -42,6 +42,7 @@ typedef struct {
 
 struct GameState{
     size_t prizeSecured;
+    size_t prizeNext;
     size_t prizeCur;
 
     FILE *questionsFile;
@@ -82,5 +83,7 @@ int fGetRandomQuestion(GameState*);
 size_t getRandomQuestionId(size_t [15], size_t, size_t);
 
 int mainGameLoop(GameState*);
+
+bool handleQuestionInput(GameState*);
 
 #endif

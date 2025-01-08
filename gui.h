@@ -2,6 +2,7 @@
 #define GUI_H
 
 #include <windows.h>
+#include <stdbool.h>
 
 // This is a forward declaration of GameState Structure
 struct GameState;
@@ -12,6 +13,7 @@ typedef enum {
     AnsB,
     AnsC,
     AnsD,
+
     LL50_50,
     LLAudHelp,
     LLPhone
@@ -27,6 +29,6 @@ void showAboutGameScreen();
 
 void getMenuChoice(GameState*);
 
-void printSimpleGameGui(GameState*, SimpleGuiSelectedItem);
+void printSimpleGameGui(GameState*, SimpleGuiSelectedItem, bool);
 
 #endif
