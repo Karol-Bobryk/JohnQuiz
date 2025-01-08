@@ -100,6 +100,7 @@ void getMenuChoice(GameState *gs){
     switch(selectedOption){
     case '1':{
         mainGameLoop(gs);
+        GameStateReset(gs);
         break;
     }
     case '2':
@@ -161,8 +162,10 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
     printf("\t");
     printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
-    printf("\t");
-    printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
+    if(gs->question.curId != 14){
+        printf("\t");
+        printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
+    }
     printf("\n");
     printf("\n");
     printf("%s\n",gs->question.strContent);

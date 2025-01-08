@@ -58,6 +58,8 @@ typedef struct GameState GameState;
 
 GameState* GameStateInit();
 
+void GameStateReset(GameState *);
+
 void GameStateFree(GameState*);
 
 size_t fGetSegLen(FILE*);

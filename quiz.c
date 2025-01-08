@@ -39,6 +39,19 @@ GameState* GameStateInit(){
 
     GameState* gs = malloc(sizeof(GameState));
 
+    gs->questionsFile = fopen(DEFAULT_FILE, "a+");
+    if(gs->questionsFile == NULL){
+        fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
+        exit(EXIT_FAILURE);
+    }
+
+    GameStateReset(gs);
+
+    return gs;
+}
+
+void GameStateReset(GameState *gs){
+
     gs->prizeCur = PRIZES[0];
     gs->prizeNext = PRIZES[1];
     gs->prizeSecured = 0;
@@ -57,19 +70,11 @@ GameState* GameStateInit(){
     gs->question.curId = 0;
     gs->question.strContentLen = 0;
 
-    gs->questionsFile = fopen(DEFAULT_FILE, "a+");
-    if(gs->questionsFile == NULL){
-        fprintf(stderr, "\n[ ERROR ] Cannot open %s\n", DEFAULT_FILE);
-        exit(EXIT_FAILURE);
-    }
-
     gs->questionsFileLineCount = fCountLines(gs->questionsFile);
 
     for (size_t i = 0; i < 15; ++i) {
         gs->questionIdBlacklist[i] = 0;
     }
-
-    return gs;
 }
 
 /*
@@ -396,7 +401,7 @@ int fGetRandomQuestion(GameState* gs){
 
     srand(time(NULL));
 
-    size_t qId = getRandomQuestionId(gs->questionIdBlacklist, gs->question.curId + 1, gs->questionsFileLineCount);
+    size_t qId = getRandomQuestionId(gs->questionIdBlacklist, gs->question.curId, gs->questionsFileLineCount);
 
     rewind(gs->questionsFile);
 
@@ -413,23 +418,29 @@ int fGetRandomQuestion(GameState* gs){
     return 0;
 }
 
-size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount){ // TODO: THIS DOES NOT WORK FOR SOME REASON
+size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount){
 
     size_t qId;
     bool isBlacklisted = false;
+
+    qId = (rand() % lineCount);
+
     while(true){
-        qId = (rand() % lineCount);
         isBlacklisted = false;
 
-        for(size_t i = 0; i < (curId + 1); ++i){
+        for(size_t i = 0; i < curId; ++i){
+
             if (blacklist[i] == qId){
+                qId = (qId + 1) % lineCount;
                 isBlacklisted = true;
                 break;
             }
-        }
 
-        if(!isBlacklisted)
+        }
+        if(!isBlacklisted){
+            blacklist[curId] = qId;
             return qId;
+        }
     }
 }
 
@@ -452,11 +463,12 @@ int mainGameLoop(GameState *gs){
             return 0; // THIS IS WHERE LOSS IS PROCESSED
         }
 
-        if(i == 4 || i ==9)
+        if(i == 4 || i == 9)
             gs->prizeSecured = PRIZES[i];
 
         freeDecodedQuestion(&(gs->question), &(gs->lifelines));
     }
+
     return 0;
 }
 
@@ -497,3 +509,4 @@ bool handleQuestionInput(GameState* gs){
             }
     }
 }
+
