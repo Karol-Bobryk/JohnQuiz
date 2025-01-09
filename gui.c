@@ -128,9 +128,24 @@ void showAboutGameScreen(){
 
     drawTitle();
 
-    printf("Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki.\n\n");
+    char* text = "Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki Politechniki Bialostockiej";
+    int textBlockWidth = getWindowWidth() - (2*titlePadding);
 
-    printf("Wcisnij ESCAPE aby powrocic do menu.");
+    for(size_t i = 0; i < strlen(text); ++i){
+        if( i == 0 ||  (i+1)%textBlockWidth == 0 ){
+            printf("\n");
+            for(size_t j = 0; j < titlePadding; ++j)
+                printf(" ");
+        }
+
+
+        printf("%c", text[i]);
+    }
+
+    printf("\n\n");
+    for(size_t i = 0; i < titlePadding; ++i)
+                printf(" ");
+    printf("Wcisnij ESCAPE aby powrocic do menu");
 
     char buttonPressed = 0;
 
@@ -162,6 +177,29 @@ void showAboutGameScreen(){
 // good luck writing docs for this
 
 // @hightower
+
+void printAudienceHelp(GameState *gs){
+    printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+
+    srand(time(NULL));
+
+    // FIX: bar length changes every time screen is reprinted (as to be expected)
+
+    int barLength = 0;
+
+    for(size_t i = 0; i < 4; ++i){
+        if(i == gs->question.correctAnsw)
+            barLength = ( rand()%6 ) + 11;
+        else
+            barLength = ( rand()%8 ) + 1;
+
+        printf("\nOdpowiedz %c: ", 'A'+i);
+
+        for(size_t j = 0; j < barLength; ++j)
+            printf("%c", 219);
+    }
+
+}
 
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
@@ -223,7 +261,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     // lifeline printington:
 
     if(gs->lifelines.isAudienceHelpInUse == true){
-        printf("\n%sNasza widownia uznala ze uwaga uwaga: %c%s",ANSI_GREEN_TEXT, 'A'+gs->question.correctAnsw, ANSI_WHITE_TEXT);
+        printAudienceHelp(gs);
     }
 
     if(gs->lifelines.isPhoneFriendInUse == true){

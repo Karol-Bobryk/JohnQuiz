@@ -29,6 +29,8 @@ void showAboutGameScreen();
 
 void getMenuChoice(GameState*);
 
+void printAudienceHelp(GameState*);
+
 void printSimpleGameGui(GameState*, SimpleGuiSelectedItem, bool);
 
 #endif
