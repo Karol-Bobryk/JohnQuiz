@@ -24,6 +24,8 @@ typedef struct {
     char* phoneFriendContent;
     size_t phoneFriendContentLen;
     size_t enabledAnswers[2]; // for 50/50 :)
+
+    size_t answBars[4];
 } Lifelines;
 
 /*

@@ -181,22 +181,17 @@ void showAboutGameScreen(){
 void printAudienceHelp(GameState *gs){
     printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
 
-    srand(time(NULL));
-
-    // FIX: bar length changes every time screen is reprinted (as to be expected)
-
-    int barLength = 0;
-
     for(size_t i = 0; i < 4; ++i){
-        if(i == gs->question.correctAnsw)
-            barLength = ( rand()%6 ) + 11;
-        else
-            barLength = ( rand()%8 ) + 1;
 
         printf("\nOdpowiedz %c: ", 'A'+i);
 
-        for(size_t j = 0; j < barLength; ++j)
-            printf("%c", 219);
+        if(i == gs->question.correctAnsw)
+            printf(ANSI_GREEN_TEXT);
+
+        for(size_t j = 0; j < gs->lifelines.answBars[i]; ++j)
+            printf("%c", 219); // ASCII for fullblock char
+
+        printf(ANSI_WHITE_TEXT);
     }
 
 }
@@ -219,7 +214,6 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("\n");
 
     for(size_t i = 0; i < 4; ++i){
-
 
         if(isConfirmed)
             printf((i == gs->question.correctAnsw) ? ANSI_GREEN_BACKGROUND : ANSI_RED_BACKGROUND);
