@@ -13,13 +13,19 @@
 const size_t PRIZES[15]; // Amount of questions is fixed to 15
 
 typedef struct {
+    bool is50_50InUse;
+    bool isAudienceHelpInUse;
+    bool isPhoneFriendInUse;
+
     bool is50_50Used;
     bool isAudienceHelpUsed;
     bool isPhoneFriendUsed;
 
     char* phoneFriendContent;
     size_t phoneFriendContentLen;
+    size_t enabledAnswers[2]; // for 50/50 :)
 
+    size_t answBars[4];
 } Lifelines;
 
 /*

@@ -57,6 +57,13 @@ void GameStateReset(GameState *gs){
     gs->prizeSecured = 0;
 
     // initialization of a Lifelines structure
+    gs->lifelines.is50_50InUse = false;
+    gs->lifelines.isAudienceHelpInUse = false;
+    gs->lifelines.isPhoneFriendInUse = false;
+
+    gs->lifelines.enabledAnswers[0] = 0;
+    gs->lifelines.enabledAnswers[1] = 0;
+
     gs->lifelines.is50_50Used = false;
     gs->lifelines.isAudienceHelpUsed = false;
     gs->lifelines.isPhoneFriendUsed = false;
@@ -74,6 +81,9 @@ void GameStateReset(GameState *gs){
 
     for (size_t i = 0; i < 15; ++i) {
         gs->questionIdBlacklist[i] = 0;
+    }
+    for (size_t i = 0; i < 4; ++i) {
+        gs->lifelines.answBars[i] = 0;
     }
 }
 
@@ -459,6 +469,10 @@ int mainGameLoop(GameState *gs){
             gs->prizeNext = PRIZES[i + 1];
         }
 
+        gs->lifelines.is50_50InUse = false;
+        gs->lifelines.isAudienceHelpInUse = false;
+        gs->lifelines.isPhoneFriendInUse = false;
+
         if(!handleQuestionInput(gs)){
             return 0; // THIS IS WHERE LOSS IS PROCESSED
         }
@@ -472,6 +486,7 @@ int mainGameLoop(GameState *gs){
     return 0;
 }
 
+#define ENABLED gs->lifelines.enabledAnswers
 bool handleQuestionInput(GameState* gs){
 
     char ch;
@@ -498,12 +513,47 @@ bool handleQuestionInput(GameState* gs){
                     break;
 
                 case 13: // decimal for enter
+
                     if(selectedItem >= AnsA && selectedItem <= AnsD){
+                        if (selectedItem != ENABLED[0] && selectedItem != ENABLED[1] && gs->lifelines.is50_50InUse)
+                            continue;
                         printSimpleGameGui(gs, selectedItem, true);
                         printf("\n\t Kliknij aby przejsc dalej.");
                         getch();
                         return gs->question.correctAnsw == selectedItem;
                     }
+                    if(selectedItem == LLAudHelp && !gs->lifelines.isAudienceHelpUsed){
+                        gs->lifelines.isAudienceHelpInUse = true;
+                        gs->lifelines.isAudienceHelpUsed = true;
+
+                        srand(time(NULL));
+
+                        for(size_t i = 0; i < 4; ++i){
+                                if(i == gs->question.correctAnsw)
+                                    gs->lifelines.answBars[i] = ( rand()%6 ) + 11;
+                                else
+                                    gs->lifelines.answBars[i] = ( rand()%8 ) + 1;
+                        }
+
+                        printSimpleGameGui(gs, selectedItem, false);
+                    }
+
+                    if(selectedItem == LLPhone && !gs->lifelines.isPhoneFriendUsed){
+                        gs->lifelines.isPhoneFriendInUse = true;
+                        gs->lifelines.isPhoneFriendUsed = true;
+                        printSimpleGameGui(gs, selectedItem, false);
+                    }
+
+                    if(selectedItem == LL50_50 && !gs->lifelines.is50_50Used){
+                        gs->lifelines.is50_50InUse = true;
+                        gs->lifelines.is50_50Used = true;
+
+                        ENABLED[0] = gs->question.correctAnsw;
+                        ENABLED[1] = ((rand() % 3 )+gs->question.correctAnsw + 1)%4;
+
+                        printSimpleGameGui(gs, selectedItem, false);
+                    }
+
                     // TODO: add lifelines logic
                     break;
             }

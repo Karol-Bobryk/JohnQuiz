@@ -119,6 +119,44 @@ void getMenuChoice(GameState *gs){
     }
 }
 
+void printCenteredText(const char* textContent, int padding) {
+    char* textCopy = strdup(textContent);
+    char* word = strtok(textCopy, " ");
+
+    char* words[100];
+    int wordCount = 0;
+
+    while (word != NULL) {
+        words[wordCount] = strdup(word);
+        wordCount++;
+        word = strtok(NULL, " ");
+    }
+
+    int textBlockWidth = getWindowWidth() - (2 * padding);
+    int charactersInLine = 0;
+
+    for (size_t i = 0; i < wordCount; ++i) {
+        if (charactersInLine == 0) {
+            for (size_t j = 0; j < padding; ++j) {
+                printf(" ");
+            }
+        }
+
+        printf("%s ", words[i]);
+        charactersInLine += strlen(words[i]) + 1; // 1 for space
+
+        if (i + 1 < wordCount && (charactersInLine + strlen(words[i + 1])) >= textBlockWidth) {
+            printf("\n");
+            charactersInLine = 0;
+        }
+    }
+
+    for (int i = 0; i < wordCount; i++) {
+        free(words[i]);
+    }
+    free(textCopy);
+}
+
 /*
 *   showAboutGameScreen
 *       displays "O grze" screen
@@ -128,9 +166,14 @@ void showAboutGameScreen(){
 
     drawTitle();
 
-    printf("Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki.\n\n");
+    char* text = "Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki Politechniki Bialostockiej";
 
-    printf("Wcisnij ESCAPE aby powrocic do menu.");
+    printCenteredText(text, titlePadding);
+
+    printf("\n\n");
+    for(size_t i = 0; i < titlePadding; ++i)
+                printf(" ");
+    printf("Wcisnij ESCAPE aby powrocic do menu");
 
     char buttonPressed = 0;
 
@@ -144,16 +187,43 @@ void showAboutGameScreen(){
     }
 
 }
+
 #define ANSI_BLACK_BACKGROUND "\x1b[40m"
 #define ANSI_BLUE_BACKGROUND "\x1b[44m"
+
 #define ANSI_BLUE_TEXT "\x1b[34m"
 #define ANSI_WHITE_TEXT "\x1b[37m"
 #define ANSI_GREEN_TEXT "\x1b[32m"
+#define ANSI_BLACK_TEXT "\x1b[30m"
+
 #define ANSI_RED_BACKGROUND "\x1b[41m"
 #define ANSI_GREEN_BACKGROUND "\x1b[42m"
 // this one and the one below have %s inside
 #define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
 #define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
+
+// good luck writing docs for this
+
+// @hightower
+
+void printAudienceHelp(GameState *gs){
+    printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+
+    for(size_t i = 0; i < 4; ++i){
+
+        printf("\nOdpowiedz %c: ", 'A'+i);
+
+        if(i == gs->question.correctAnsw)
+            printf(ANSI_GREEN_TEXT);
+
+        for(size_t j = 0; j < gs->lifelines.answBars[i]; ++j)
+            printf("%c", 219); // ASCII for fullblock char
+
+        printf(ANSI_WHITE_TEXT);
+    }
+
+}
+
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
     system("cls");
@@ -162,7 +232,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
     printf("\t");
     printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
-    if(gs->question.curId != 14){
+    if(gs->question.curId != 15){ // :D
         printf("\t");
         printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
     }
@@ -178,9 +248,19 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
         else if(selectedItem == i)
             printf(ANSI_BLUE_BACKGROUND);
 
-        printf("\t%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
+        bool hideText= (gs->lifelines.is50_50InUse
+           && i != gs->lifelines.enabledAnswers[0]
+           && i != gs->lifelines.enabledAnswers[1]);
+
+        if(hideText){
+           printf("\t%c. %s\n", 'A' + i,ANSI_BLACK_BACKGROUND);
+        } else {
+            printf("\t%c.%s %s\n", 'A' + i, ANSI_BLACK_BACKGROUND, gs->question.answ[i]);
+        }
     }
     printf("\n");
+
+    // lifelines options pompa
 
     if(selectedItem == LL50_50)
             printf(ANSI_BLUE_BACKGROUND);
@@ -199,6 +279,18 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("3.");
     printf(gs->lifelines.isPhoneFriendUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Telefon do przyjaciela ");
     printf(ANSI_BLACK_BACKGROUND);
+
+    // lifeline printington:
+
+    if(gs->lifelines.isAudienceHelpInUse == true){
+        printAudienceHelp(gs);
+    }
+
+    if(gs->lifelines.isPhoneFriendInUse == true){
+        printf("\n%s%s%s",
+               ANSI_GREEN_TEXT, gs->lifelines.phoneFriendContent, ANSI_WHITE_TEXT);
+    }
+
     printf("\n\n");
     printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
     printf("\n");
