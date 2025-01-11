@@ -210,6 +210,9 @@ void printAudienceHelp(GameState *gs){
     printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
 
     for(size_t i = 0; i < 4; ++i){
+        if(gs->lifelines.is50_50InUse && ((i != gs->lifelines.enabledAnswers[0] && i != gs->lifelines.enabledAnswers[1]))){
+            continue;
+        }
 
         printf("\nOdpowiedz %c: ", 'A'+i);
 
