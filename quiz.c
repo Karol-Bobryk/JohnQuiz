@@ -1,4 +1,5 @@
 #include "quiz.h"
+#include "gui.h"
 
 // this define below is here due to the mingw gcc problems with %zu specifier
 #ifdef __MINGW32__
@@ -474,7 +475,7 @@ int mainGameLoop(GameState *gs){
         gs->lifelines.isPhoneFriendInUse = false;
 
         if(!handleQuestionInput(gs)){
-            return 0; // THIS IS WHERE LOSS IS PROCESSED
+            showGameOverScreen(gs);
         }
 
         if(i == 4 || i == 9)
@@ -482,6 +483,8 @@ int mainGameLoop(GameState *gs){
 
         freeDecodedQuestion(&(gs->question), &(gs->lifelines));
     }
+
+    showVictoryScreen(gs);
 
     return 0;
 }

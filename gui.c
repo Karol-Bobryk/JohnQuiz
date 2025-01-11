@@ -119,6 +119,12 @@ void getMenuChoice(GameState *gs){
     }
 }
 
+void printPadding(int padding){
+    for(size_t i = 0; i < padding; ++i)
+        printf(" ");
+
+}
+
 void printCenteredText(const char* textContent, int padding) {
     char* textCopy = strdup(textContent);
     char* word = strtok(textCopy, " ");
@@ -137,9 +143,7 @@ void printCenteredText(const char* textContent, int padding) {
 
     for (size_t i = 0; i < wordCount; ++i) {
         if (charactersInLine == 0) {
-            for (size_t j = 0; j < padding; ++j) {
-                printf(" ");
-            }
+            printPadding(padding);
         }
 
         printf("%s ", words[i]);
@@ -171,8 +175,7 @@ void showAboutGameScreen(){
     printCenteredText(text, titlePadding);
 
     printf("\n\n");
-    for(size_t i = 0; i < titlePadding; ++i)
-                printf(" ");
+    printPadding(titlePadding);
     printf("Wcisnij ESCAPE aby powrocic do menu");
 
     char buttonPressed = 0;
@@ -228,7 +231,6 @@ void printAudienceHelp(GameState *gs){
 }
 
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
-
     system("cls");
 
     printf("\n");
@@ -298,4 +300,81 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
     printf("\n");
 
+}
+
+void showGameOverScreen(GameState *gs){
+    system("cls");
+
+    drawTitle();
+
+    char* header = "Przegrales!!";
+
+    printf("\n");
+    printPadding((getWindowWidth()-strlen(header))/2);
+    printf("%s", header);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Liczba prawidlowych odpowiedzi: %d", gs->question.curId-1);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Wygrana suma: %s%d$%s, Gratulujemy!", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
+
+    printf("\n\n");
+    printCenteredText("Wcisnij ESCAPE aby powrocic do menu", titlePadding);
+
+    char buttonPressed = 0;
+
+    while(1){
+        buttonPressed = getch();
+        if(buttonPressed != 27){
+            continue;
+        }
+
+        main();
+    }
+}
+
+void showVictoryScreen(GameState *gs){
+    system("cls");
+
+    drawTitle();
+
+    char* header = "Wygrales!";
+
+    printf("\n");
+    printPadding((getWindowWidth()-strlen(header))/2);
+    printf("%s", header);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Odpoweidziales prawidlowo na wszystkie pytania.");
+
+    int usedLifelines = 0;
+    if(gs->lifelines.is50_50Used) usedLifelines++;
+    if(gs->lifelines.isAudienceHelpUsed) usedLifelines++;
+    if(gs->lifelines.isPhoneFriendUsed) usedLifelines++;
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Wykorzystales %d kola ratunkowe.", usedLifelines);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Twoja nagroda: %s1 000 000$%s, Gratulujemy!", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+
+    printf("\n\n");
+    printCenteredText("Wcisnij ESCAPE aby powrocic do menu", titlePadding);
+
+    char buttonPressed = 0;
+
+    while(1){
+        buttonPressed = getch();
+        if(buttonPressed != 27){
+            continue;
+        }
+
+        main();
+    }
 }
