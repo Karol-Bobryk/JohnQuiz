@@ -82,6 +82,9 @@ void GameStateReset(GameState *gs){
     for (size_t i = 0; i < 15; ++i) {
         gs->questionIdBlacklist[i] = 0;
     }
+    for (size_t i = 0; i < 4; ++i) {
+        gs->lifelines.answBars[i] = 0;
+    }
 }
 
 /*
@@ -522,6 +525,16 @@ bool handleQuestionInput(GameState* gs){
                     if(selectedItem == LLAudHelp && !gs->lifelines.isAudienceHelpUsed){
                         gs->lifelines.isAudienceHelpInUse = true;
                         gs->lifelines.isAudienceHelpUsed = true;
+
+                        srand(time(NULL));
+
+                        for(size_t i = 0; i < 4; ++i){
+                                if(i == gs->question.correctAnsw)
+                                    gs->lifelines.answBars[i] = ( rand()%6 ) + 11;
+                                else
+                                    gs->lifelines.answBars[i] = ( rand()%8 ) + 1;
+                        }
+
                         printSimpleGameGui(gs, selectedItem, false);
                     }
 

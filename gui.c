@@ -119,6 +119,44 @@ void getMenuChoice(GameState *gs){
     }
 }
 
+void printCenteredText(const char* textContent, int padding) {
+    char* textCopy = strdup(textContent);
+    char* word = strtok(textCopy, " ");
+
+    char* words[100];
+    int wordCount = 0;
+
+    while (word != NULL) {
+        words[wordCount] = strdup(word);
+        wordCount++;
+        word = strtok(NULL, " ");
+    }
+
+    int textBlockWidth = getWindowWidth() - (2 * padding);
+    int charactersInLine = 0;
+
+    for (size_t i = 0; i < wordCount; ++i) {
+        if (charactersInLine == 0) {
+            for (size_t j = 0; j < padding; ++j) {
+                printf(" ");
+            }
+        }
+
+        printf("%s ", words[i]);
+        charactersInLine += strlen(words[i]) + 1; // 1 for space
+
+        if (i + 1 < wordCount && (charactersInLine + strlen(words[i + 1])) >= textBlockWidth) {
+            printf("\n");
+            charactersInLine = 0;
+        }
+    }
+
+    for (int i = 0; i < wordCount; i++) {
+        free(words[i]);
+    }
+    free(textCopy);
+}
+
 /*
 *   showAboutGameScreen
 *       displays "O grze" screen
@@ -128,9 +166,14 @@ void showAboutGameScreen(){
 
     drawTitle();
 
-    printf("Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki.\n\n");
+    char* text = "Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki Politechniki Bialostockiej";
 
-    printf("Wcisnij ESCAPE aby powrocic do menu.");
+    printCenteredText(text, titlePadding);
+
+    printf("\n\n");
+    for(size_t i = 0; i < titlePadding; ++i)
+                printf(" ");
+    printf("Wcisnij ESCAPE aby powrocic do menu");
 
     char buttonPressed = 0;
 
@@ -163,6 +206,24 @@ void showAboutGameScreen(){
 
 // @hightower
 
+void printAudienceHelp(GameState *gs){
+    printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+
+    for(size_t i = 0; i < 4; ++i){
+
+        printf("\nOdpowiedz %c: ", 'A'+i);
+
+        if(i == gs->question.correctAnsw)
+            printf(ANSI_GREEN_TEXT);
+
+        for(size_t j = 0; j < gs->lifelines.answBars[i]; ++j)
+            printf("%c", 219); // ASCII for fullblock char
+
+        printf(ANSI_WHITE_TEXT);
+    }
+
+}
+
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
 
     system("cls");
@@ -181,7 +242,6 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("\n");
 
     for(size_t i = 0; i < 4; ++i){
-
 
         if(isConfirmed)
             printf((i == gs->question.correctAnsw) ? ANSI_GREEN_BACKGROUND : ANSI_RED_BACKGROUND);
@@ -223,7 +283,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     // lifeline printington:
 
     if(gs->lifelines.isAudienceHelpInUse == true){
-        printf("\n%sNasza widownia uznala ze uwaga uwaga: %c%s",ANSI_GREEN_TEXT, 'A'+gs->question.correctAnsw, ANSI_WHITE_TEXT);
+        printAudienceHelp(gs);
     }
 
     if(gs->lifelines.isPhoneFriendInUse == true){

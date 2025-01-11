@@ -25,9 +25,13 @@ int drawTitle();
 
 void drawMenu();
 
+void printCenteredText(const char*, int);
+
 void showAboutGameScreen();
 
 void getMenuChoice(GameState*);
+
+void printAudienceHelp(GameState*);
 
 void printSimpleGameGui(GameState*, SimpleGuiSelectedItem, bool);
 
