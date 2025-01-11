@@ -119,6 +119,44 @@ void getMenuChoice(GameState *gs){
     }
 }
 
+void printCenteredText(const char* textContent, int padding) {
+    char* textCopy = strdup(textContent);
+    char* word = strtok(textCopy, " ");
+
+    char* words[100];
+    int wordCount = 0;
+
+    while (word != NULL) {
+        words[wordCount] = strdup(word);
+        wordCount++;
+        word = strtok(NULL, " ");
+    }
+
+    int textBlockWidth = getWindowWidth() - (2 * padding);
+    int charactersInLine = 0;
+
+    for (size_t i = 0; i < wordCount; ++i) {
+        if (charactersInLine == 0) {
+            for (size_t j = 0; j < padding; ++j) {
+                printf(" ");
+            }
+        }
+
+        printf("%s ", words[i]);
+        charactersInLine += strlen(words[i]) + 1; // 1 for space
+
+        if (i + 1 < wordCount && (charactersInLine + strlen(words[i + 1])) >= textBlockWidth) {
+            printf("\n");
+            charactersInLine = 0;
+        }
+    }
+
+    for (int i = 0; i < wordCount; i++) {
+        free(words[i]);
+    }
+    free(textCopy);
+}
+
 /*
 *   showAboutGameScreen
 *       displays "O grze" screen
@@ -129,18 +167,8 @@ void showAboutGameScreen(){
     drawTitle();
 
     char* text = "Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki Politechniki Bialostockiej";
-    int textBlockWidth = getWindowWidth() - (2*titlePadding);
 
-    for(size_t i = 0; i < strlen(text); ++i){
-        if( i == 0 ||  (i+1)%textBlockWidth == 0 ){
-            printf("\n");
-            for(size_t j = 0; j < titlePadding; ++j)
-                printf(" ");
-        }
-
-
-        printf("%c", text[i]);
-    }
+    printCenteredText(text, titlePadding);
 
     printf("\n\n");
     for(size_t i = 0; i < titlePadding; ++i)

@@ -25,6 +25,8 @@ int drawTitle();
 
 void drawMenu();
 
+void printCenteredText(const char*, int);
+
 void showAboutGameScreen();
 
 void getMenuChoice(GameState*);
