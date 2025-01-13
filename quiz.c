@@ -285,6 +285,18 @@ void freeDecodedQuestion(Question* q, Lifelines* ll){
     free(ll->phoneFriendContent);
 }
 
+/*
+*   fAppendQuestion
+*       in order to add a question to the given file, this function takes input for all the necessary fields,
+        concatenates them into one buffer and appends that buffer to the file as one question.
+*
+*   arguments:
+*       f - file to write the question to.
+*
+*   return value:
+*       0 for success
+*       -1 in case of an error
+*/
 #define MAX_QUESTION_SIZE 256
 int fAppendQuestion(FILE* f){
 
@@ -365,6 +377,13 @@ int fAppendQuestion(FILE* f){
     return 0;
 }
 
+/*
+*   strTrimNewLine
+*       given a certain string, it trims it if the last character is a newline.
+*
+*   arguments
+*       sBuf - string to trim.
+*/
 void strTrimNewline(char* sBuf){
 
     size_t len = strlen(sBuf);
@@ -429,6 +448,19 @@ int fGetRandomQuestion(GameState* gs){
     return 0;
 }
 
+/*
+*   getRandomQuestionId
+*       grabs a random non-blacklisted question's ID, and blacklists the current question
+*       so that the user can't encounter duplicate questions.
+*
+*   arguments:
+*       blacklist - array[15] of integers signifying indexes of blacklisted questions
+*       curId - index of current questions
+*       lineCount - count of lines in the question file
+*
+*   return value:
+*       returns the next random question ID.
+*/
 size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount){
 
     size_t qId;
@@ -454,7 +486,16 @@ size_t getRandomQuestionId(size_t blacklist[15], size_t curId, size_t lineCount)
         }
     }
 }
-
+/*
+*   mainGameLoop
+*       handles the main game loop - picking and displaying questions, setting reward values
+*
+*   arguments:
+*       gs - currentGameState
+*
+*   return value:
+*       0 after showing the endGame screen.
+*/
 int mainGameLoop(GameState *gs){
 
     for(size_t i = 0; i < 15; ++i){
@@ -489,6 +530,16 @@ int mainGameLoop(GameState *gs){
     return 0;
 }
 
+/*
+*   handleQuestionInput
+*       handles input from the user, ie. picking questions with wasd, and picking lifelines (1-3)
+*
+*   arguments:
+*       gs - currentGameState
+*
+*   return value:
+*       true / false - true if the user chooses correctly, false if not.
+*/
 #define ENABLED gs->lifelines.enabledAnswers
 bool handleQuestionInput(GameState* gs){
 
@@ -557,7 +608,6 @@ bool handleQuestionInput(GameState* gs){
                         printSimpleGameGui(gs, selectedItem, false);
                     }
 
-                    // TODO: add lifelines logic
                     break;
             }
     }
