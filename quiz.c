@@ -287,6 +287,8 @@ void freeDecodedQuestion(Question* q, Lifelines* ll){
 #define MAX_QUESTION_SIZE 256
 int fAppendQuestion(FILE* f){
 
+    system("cls");
+
     char sBuf[MAX_QUESTION_SIZE];
     while(true){
 

@@ -104,8 +104,7 @@ void getMenuChoice(GameState *gs){
         break;
     }
     case '2':
-        printf("placeholder");
-        getch();
+        fAppendQuestion(gs->questionsFile);
         break;
     case '3':
         showAboutGameScreen();
