@@ -25,7 +25,7 @@ int drawTitle();
 
 void drawMenu();
 
-void printPadding(int);
+void printPadding(size_t);
 
 void printCenteredText(const char*, int);
 

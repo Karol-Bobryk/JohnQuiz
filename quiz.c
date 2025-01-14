@@ -517,6 +517,7 @@ int mainGameLoop(GameState *gs){
 
         if(!handleQuestionInput(gs)){
             showGameOverScreen(gs);
+            return 0;
         }
 
         if(i == 4 || i == 9)

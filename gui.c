@@ -129,7 +129,7 @@ void getMenuChoice(GameState *gs){
 *   arguments:
 *       padding - number of newlines to be printed out
 */
-void printPadding(int padding){
+void printPadding(size_t padding){
     for(size_t i = 0; i < padding; ++i)
         printf(" ");
 
@@ -233,7 +233,7 @@ void showAboutGameScreen(){
 *       gs - current GameState
 */
 void printAudienceHelp(GameState *gs){
-    printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+    printf("\n\nWyniki glosowania publicznosci: \n");
 
     for(size_t i = 0; i < 4; ++i){
         if(gs->lifelines.is50_50InUse && ((i != gs->lifelines.enabledAnswers[0] && i != gs->lifelines.enabledAnswers[1]))){
@@ -367,15 +367,9 @@ void showGameOverScreen(GameState *gs){
     printf("\n\n");
     printCenteredText("Wcisnij ESCAPE aby powrocic do menu", titlePadding);
 
-    char buttonPressed = 0;
-
     while(1){
-        buttonPressed = getch();
-        if(buttonPressed != 27){
-            continue;
-        }
-
-        main();
+        if(getch() == 27)
+            return;
     }
 }
 
@@ -416,14 +410,8 @@ void showVictoryScreen(GameState *gs){
     printf("\n\n");
     printCenteredText("Wcisnij ESCAPE aby powrocic do menu", titlePadding);
 
-    char buttonPressed = 0;
-
     while(1){
-        buttonPressed = getch();
-        if(buttonPressed != 27){
-            continue;
-        }
-
-        main();
+        if(getch() == 27)
+            return;
     }
 }
