@@ -93,6 +93,9 @@ void drawMenu(){
 /*
 *   getMenuChoice
 *       handles user input when dealing with the menu
+*
+*   arguments:
+*       gs - current GameState
 */
 void getMenuChoice(GameState *gs){
     char selectedOption = getch();
@@ -119,6 +122,28 @@ void getMenuChoice(GameState *gs){
     }
 }
 
+/*
+*   printPadding
+*       prints a given number of newlines to serve as padding
+*
+*   arguments:
+*       padding - number of newlines to be printed out
+*/
+void printPadding(size_t padding){
+    for(size_t i = 0; i < padding; ++i)
+        printf(" ");
+
+}
+
+/*
+*   printCenteredText
+*       outputs a given string of characters with an appropriate amount of
+*       padding so that it is centered in the terminal
+*
+*   arguments:
+*       textContent - text to be centered
+*       padding - number of lines to be used as padding
+*/
 void printCenteredText(const char* textContent, int padding) {
     char* textCopy = strdup(textContent);
     char* word = strtok(textCopy, " ");
@@ -137,9 +162,7 @@ void printCenteredText(const char* textContent, int padding) {
 
     for (size_t i = 0; i < wordCount; ++i) {
         if (charactersInLine == 0) {
-            for (size_t j = 0; j < padding; ++j) {
-                printf(" ");
-            }
+            printPadding(padding);
         }
 
         printf("%s ", words[i]);
@@ -166,13 +189,12 @@ void showAboutGameScreen(){
 
     drawTitle();
 
-    char* text = "Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki Politechniki Bialostockiej";
+    char* text = "Autorzy: Karol Bobryk, Marcel Alefierowicz, Patryk Wojtkielewicz, studenci informatyki 1 roku na wydziale informatyki Politechniki Bialostockiej, Pracownia Specjalistyczna #4";
 
     printCenteredText(text, titlePadding);
 
     printf("\n\n");
-    for(size_t i = 0; i < titlePadding; ++i)
-                printf(" ");
+    printPadding(titlePadding);
     printf("Wcisnij ESCAPE aby powrocic do menu");
 
     char buttonPressed = 0;
@@ -202,14 +224,21 @@ void showAboutGameScreen(){
 #define ANSI_RED_BACKGROUND_TEXT "\x1b[41m%25s\x1b[40m"
 #define ANSI_GREEN_BACKGROUND_TEXT "\x1b[42m%25s\x1b[40m"
 
-// good luck writing docs for this
-
-// @hightower
-
+/*
+*   printAudienceHelp
+*       outputs a 4 bar stats screen showing the audience's opinion
+*       on what the correct answer is
+*
+*   arguments:
+*       gs - current GameState
+*/
 void printAudienceHelp(GameState *gs){
-    printf("\n\nWyniki glosowania publicznosci: \n", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+    printf("\n\nWyniki glosowania publicznosci: \n");
 
     for(size_t i = 0; i < 4; ++i){
+        if(gs->lifelines.is50_50InUse && ((i != gs->lifelines.enabledAnswers[0] && i != gs->lifelines.enabledAnswers[1]))){
+            continue;
+        }
 
         printf("\nOdpowiedz %c: ", 'A'+i);
 
@@ -224,15 +253,26 @@ void printAudienceHelp(GameState *gs){
 
 }
 
+/*
+*   printSimpleGameGui
+*       prints the GUI of the round being played, in 2 states:
+*            - unconfirmed: the player still hasnt selected their answer and can choose to use a lifeline if needed.
+*
+*            - confirmed: the player has selected their choice and can now see whether his choice was correct.
+*                         if correct, the player proceeds to the next round.
+*   arguments:
+*       gs - current GameState
+*       selectedItem - item to be rendered (highlighted) as currently selected
+*       isConfirmed - bool controling the round state
+*/
 void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool isConfirmed){
-
     system("cls");
 
     printf("\n");
     printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
     printf("\t");
     printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
-    if(gs->question.curId != 15){ // :D
+    if(gs->question.curId != 15){
         printf("\t");
         printf("%sNagroda w nastepnej rundzie: $%d%s", ANSI_GREEN_TEXT, gs->prizeNext, ANSI_WHITE_TEXT);
     }
@@ -240,6 +280,8 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("\n");
     printf("%s\n",gs->question.strContent);
     printf("\n");
+
+    // rendering the selectable answers:
 
     for(size_t i = 0; i < 4; ++i){
 
@@ -260,7 +302,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     }
     printf("\n");
 
-    // lifelines options pompa
+    // printing available lifelines:
 
     if(selectedItem == LL50_50)
             printf(ANSI_BLUE_BACKGROUND);
@@ -280,7 +322,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf(gs->lifelines.isPhoneFriendUsed ? ANSI_RED_BACKGROUND_TEXT : ANSI_GREEN_BACKGROUND_TEXT, "Telefon do przyjaciela ");
     printf(ANSI_BLACK_BACKGROUND);
 
-    // lifeline printington:
+    // checking to see if audience help or phone friend is in use, then rendering their content:
 
     if(gs->lifelines.isAudienceHelpInUse == true){
         printAudienceHelp(gs);
@@ -295,4 +337,81 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
     printf("\n");
 
+}
+
+/*
+*   showGameOverScreen
+*       prints the game over screen
+*   arguments:
+*       gs - current GameState
+*/
+void showGameOverScreen(GameState *gs){
+    system("cls");
+
+    drawTitle();
+
+    char* header = "Przegrales!!";
+
+    printf("\n");
+    printPadding((getWindowWidth()-strlen(header))/2);
+    printf("%s", header);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Liczba prawidlowych odpowiedzi: %d", gs->question.curId-1);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Wygrana suma: %s%d$%s, Gratulujemy!", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
+
+    printf("\n\n");
+    printCenteredText("Wcisnij ESCAPE aby powrocic do menu", titlePadding);
+
+    while(1){
+        if(getch() == 27)
+            return;
+    }
+}
+
+/*
+*   showVictoryScreen
+*       prints the victory screen
+*   arguments:
+*       gs - current GameState
+*/
+void showVictoryScreen(GameState *gs){
+    system("cls");
+
+    drawTitle();
+
+    char* header = "Wygrales!";
+
+    printf("\n");
+    printPadding((getWindowWidth()-strlen(header))/2);
+    printf("%s", header);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Odpoweidziales prawidlowo na wszystkie pytania.");
+
+    int usedLifelines = 0;
+    if(gs->lifelines.is50_50Used) usedLifelines++;
+    if(gs->lifelines.isAudienceHelpUsed) usedLifelines++;
+    if(gs->lifelines.isPhoneFriendUsed) usedLifelines++;
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Wykorzystales %d kola ratunkowe.", usedLifelines);
+
+    printf("\n\n");
+    printPadding(titlePadding);
+    printf("Twoja nagroda: %s1 000 000$%s, Gratulujemy!", ANSI_GREEN_TEXT, ANSI_WHITE_TEXT);
+
+    printf("\n\n");
+    printCenteredText("Wcisnij ESCAPE aby powrocic do menu", titlePadding);
+
+    while(1){
+        if(getch() == 27)
+            return;
+    }
 }
