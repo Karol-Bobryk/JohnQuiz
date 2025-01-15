@@ -9,9 +9,6 @@
 #include <conio.h>
 #include "gui.h"
 
-
-const size_t PRIZES[15]; // Amount of questions is fixed to 15
-
 typedef struct {
     bool is50_50InUse;
     bool isAudienceHelpInUse;
@@ -46,10 +43,18 @@ typedef struct {
 
 } Question;
 
+struct PrizeLL{
+    bool isSecure;
+    size_t value;
+    struct PrizeLL *next;
+};
+
+typedef struct PrizeLL PrizeLL;
+
 struct GameState{
     size_t prizeSecured;
     size_t prizeNext;
-    size_t prizeCur;
+    PrizeLL* prizeLLCur;
 
     FILE *questionsFile;
     size_t questionsFileLineCount;
@@ -57,10 +62,12 @@ struct GameState{
 
     Question question;
     Lifelines lifelines;
+    PrizeLL *prizeLL;
 
 };
 
 typedef struct GameState GameState;
+
 
 GameState* GameStateInit();
 
@@ -93,5 +100,9 @@ size_t getRandomQuestionId(size_t [15], size_t, size_t);
 int mainGameLoop(GameState*);
 
 bool handleQuestionInput(GameState*);
+
+PrizeLL* PrizeLLInit();
+
+void PrizeLLFree(PrizeLL*);
 
 #endif

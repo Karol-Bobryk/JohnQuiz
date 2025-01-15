@@ -10,24 +10,6 @@
 
 #define BUFFER_SIZE 1024 // size of buffer for count lines in a file
 
-const size_t PRIZES[15] = {
-        100,
-        200,
-        300,
-        500,
-        1000,
-        2000,
-        4000,
-        8000,
-        16000,
-        32000,
-        64000,
-        125000,
-        250000,
-        500000,
-        1000000
-    };
-
 /*
 *   GameStateInit
 *       initializes a gamestate structure
@@ -46,6 +28,8 @@ GameState* GameStateInit(){
         exit(EXIT_FAILURE);
     }
 
+    gs->prizeLL = PrizeLLInit();
+
     GameStateReset(gs);
 
     return gs;
@@ -53,8 +37,8 @@ GameState* GameStateInit(){
 
 void GameStateReset(GameState *gs){
 
-    gs->prizeCur = PRIZES[0];
-    gs->prizeNext = PRIZES[1];
+    gs->prizeLLCur = gs->prizeLL;
+    gs->prizeNext = gs->prizeLL->next->value;
     gs->prizeSecured = 0;
 
     // initialization of a Lifelines structure
@@ -98,6 +82,7 @@ void GameStateReset(GameState *gs){
 */
 void GameStateFree(GameState* gs){
 
+    PrizeLLFree(gs->prizeLL);
     fclose(gs->questionsFile);
     free(gs);
 }
@@ -256,7 +241,7 @@ void printGameState(GameState* gs) {
 
     printf("[ INFO ] GameState:\n");
     printf("[ INFO ]   prizeSecured: %zu\n", gs->prizeSecured);
-    printf("[ INFO ]   prizeCur: %zu\n", gs->prizeCur);
+    printf("[ INFO ]   prizeCur: %zu\n", gs->prizeLLCur->value);
 
     if (gs->questionsFile != NULL) {
         printf("[ INFO ]   questionsFile: %p\n", (void*)gs->questionsFile);
@@ -503,14 +488,12 @@ int mainGameLoop(GameState *gs){
     for(size_t i = 0; i < 15; ++i){
 
         fGetRandomQuestion(gs);
+        
+        if(i != 0 ){
+            gs->prizeLLCur = gs->prizeLLCur->next;
 
-        if(i == 14){
-            gs->prizeCur = PRIZES[i];
-            gs->prizeNext = 0;
-        }
-        else{
-            gs->prizeCur = PRIZES[i];
-            gs->prizeNext = PRIZES[i + 1];
+            if(i != 14)
+                gs->prizeNext = gs->prizeLLCur->next->value;
         }
 
         gs->lifelines.is50_50InUse = false;
@@ -521,9 +504,11 @@ int mainGameLoop(GameState *gs){
             showGameOverScreen(gs);
             return 0;
         }
+        
+        if(gs->prizeLLCur->isSecure)
+            gs->prizeSecured = gs->prizeLLCur->value;
 
-        if(i == 4 || i == 9)
-            gs->prizeSecured = PRIZES[i];
+
 
         freeDecodedQuestion(&(gs->question), &(gs->lifelines));
     }
@@ -616,3 +601,47 @@ bool handleQuestionInput(GameState* gs){
     }
 }
 
+PrizeLL* PrizeLLInit(){
+    const size_t PRIZES[15] = {
+        100,
+        200,
+        300,
+        500,
+        1000,
+        2000,
+        4000,
+        8000,
+        16000,
+        32000,
+        64000,
+        125000,
+        250000,
+        500000,
+        1000000
+    };
+
+    PrizeLL *pLL = malloc(sizeof(PrizeLL));
+
+    PrizeLL *curNode = pLL;
+
+    for(size_t i = 0; i<15; ++i){
+        curNode->value = PRIZES[i];
+        curNode->isSecure = (i == 4 || i == 9);
+        curNode->next = (i != 14) ? malloc(sizeof(PrizeLL)) : NULL;
+        curNode = curNode->next;
+    }
+
+    return pLL;
+}
+
+void PrizeLLFree(PrizeLL* pLL){
+
+    PrizeLL* curNode = pLL;
+    PrizeLL* nxtNode;
+
+    while(curNode != NULL){
+        nxtNode = curNode->next;
+        free(curNode);
+        curNode = nxtNode;
+    }
+}
