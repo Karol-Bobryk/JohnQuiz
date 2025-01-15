@@ -268,7 +268,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     system("cls");
 
     printf("\n");
-    printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeCur, ANSI_WHITE_TEXT);
+    printf("%sGrasz o: $%-22d%s", ANSI_GREEN_TEXT, gs->prizeLLCur->value, ANSI_WHITE_TEXT);
     printf("\t");
     printf("%sNagroda gwarantowana: $%-11d%s", ANSI_GREEN_TEXT, gs->prizeSecured, ANSI_WHITE_TEXT);
     if(gs->question.curId != 15){
