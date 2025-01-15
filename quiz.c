@@ -307,7 +307,7 @@ int fAppendQuestion(FILE* f){
 
         printf("Podaj tresc pytania: ");
         if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
-            printf("\Pytanie nie moze byc dluzsze niz %d, prosze sprobuj ponownie\n", MAX_QUESTION_SIZE - 1);
+            printf("\nPytanie nie moze byc dluzsze niz %d, prosze sprobuj ponownie\n", MAX_QUESTION_SIZE - 1);
             continue;
         }
         strTrimNewline(sBuf);
@@ -324,7 +324,7 @@ int fAppendQuestion(FILE* f){
 
             printf("Podaj zawartosc odpowiedzi numer %zu: ", i);
             if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
-                printf("\Odpowiedz %zu nie moze byc dluzsza niz %d, prosze sprobuj ponownie\n", i, MAX_QUESTION_SIZE - 1);
+                printf("\nOdpowiedz %zu nie moze byc dluzsza niz %d, prosze sprobuj ponownie\n", i, MAX_QUESTION_SIZE - 1);
                 continue;
             }
             strTrimNewline(sBuf);
@@ -349,7 +349,7 @@ int fAppendQuestion(FILE* f){
         }
 
         if(corAnsw < 0 || corAnsw > 3){
-            printf("\Prosze, podaj liczbe w zakresie <0,3>\n");
+            printf("\nProsze, podaj liczbe w zakresie <0,3>\n");
             continue;
         }
         getchar();
@@ -365,7 +365,7 @@ int fAppendQuestion(FILE* f){
 
         printf("Podaj zawartosc pytania do przyjaciela: ");
         if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
-            printf("\Zawartosc pytania do przyjaciela nie moze byc dluzsza niz %d, prosze sprobuj ponownie\n", MAX_QUESTION_SIZE - 1);
+            printf("\nZawartosc pytania do przyjaciela nie moze byc dluzsza niz %d, prosze sprobuj ponownie\n", MAX_QUESTION_SIZE - 1);
             continue;
         }
 
