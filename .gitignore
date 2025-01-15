@@ -1,1 +1,4 @@
 *.depend
+*.o
+*.layout
+*.exe
