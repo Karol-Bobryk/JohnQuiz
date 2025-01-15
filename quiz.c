@@ -305,15 +305,15 @@ int fAppendQuestion(FILE* f){
     char sBuf[MAX_QUESTION_SIZE];
     while(true){
 
-        printf("Provide question content: ");
+        printf("Podaj tresc pytania: ");
         if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
-            printf("\nQuestion cannot be longer than %d, please try again\n", MAX_QUESTION_SIZE - 1);
+            printf("\Pytanie nie moze byc dluzsze niz %d, prosze sprobuj ponownie\n", MAX_QUESTION_SIZE - 1);
             continue;
         }
         strTrimNewline(sBuf);
 
         if((fputs(sBuf, f) < 0) || (fputc(':', f) < 0)){
-            fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+            fprintf(stderr, "\n[ ERROR ] Nie udalo sie zapisac %s\n", DEFAULT_FILE);
             return -1;
         }
         break;
@@ -322,15 +322,15 @@ int fAppendQuestion(FILE* f){
     for(size_t i = 0; i < 4; ++i){
         while(true){
 
-            printf("Provide answer %zu content: ", i);
+            printf("Podaj zawartosc odpowiedzi numer %zu: ", i);
             if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
-                printf("\nAnswer %zu cannot be longer than %d, please try again\n", i, MAX_QUESTION_SIZE - 1);
+                printf("\Odpowiedz %zu nie moze byc dluzsza niz %d, prosze sprobuj ponownie\n", i, MAX_QUESTION_SIZE - 1);
                 continue;
             }
             strTrimNewline(sBuf);
 
             if((fputs(sBuf, f) < 0) || (fputc(':', f) < 0)){
-                fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+                fprintf(stderr, "\n[ ERROR ] Nie udalo sie zapisac do %s\n", DEFAULT_FILE);
                 return -1;
             }
             break;
@@ -341,21 +341,21 @@ int fAppendQuestion(FILE* f){
 
         size_t corAnsw;
 
-        printf("Provide correct answer index: ");
+        printf("Podaj indeks poprawnej odpowiedzi: ");
         if((scanf("%d", &corAnsw) != 1)){
-            printf("\nCorrect answer index has to be an integer\n");
+            printf("\nIndeks odpowiedzi musi byc liczba calkowita\n");
             getchar();
             continue;
         }
 
         if(corAnsw < 0 || corAnsw > 3){
-            printf("\nPlease, provide the correct index range <0,3>\n");
+            printf("\Prosze, podaj liczbe w zakresie <0,3>\n");
             continue;
         }
         getchar();
 
         if(fprintf(f, "%d:", corAnsw) < 0){
-            fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+            fprintf(stderr, "\n[ ERROR ] Nie udalo sie zapisac do %s\n", DEFAULT_FILE);
             return -1;
         }
         break;
@@ -363,14 +363,14 @@ int fAppendQuestion(FILE* f){
 
     while(true){
 
-        printf("Provide phone friend lifeline content: ");
+        printf("Podaj zawartosc pytania do przyjaciela: ");
         if(fgets(sBuf, MAX_QUESTION_SIZE, stdin) == NULL){
-            printf("\nPhone friend lifeline content cannot be longer than %d, please try again\n", MAX_QUESTION_SIZE - 1);
+            printf("\Zawartosc pytania do przyjaciela nie moze byc dluzsza niz %d, prosze sprobuj ponownie\n", MAX_QUESTION_SIZE - 1);
             continue;
         }
 
         if(fputs(sBuf, f) < 0){
-            fprintf(stderr, "\n[ ERROR ] Failed to write to %s\n", DEFAULT_FILE);
+            fprintf(stderr, "\n[ ERROR ] Nie udalo sie zapisac do %s\n", DEFAULT_FILE);
             return -1;
         }
         break;
