@@ -333,7 +333,7 @@ void printSimpleGameGui(GameState *gs, SimpleGuiSelectedItem selectedItem, bool 
     }
 
     printf("\n\n");
-    printf("%sUzywaj w/s oraz ENTER aby sie poruszac!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
+    printf("%sUzywaj w/s aby sie poruszac, oraz ENTER aby zatwierdzic odpowiedz!%s", ANSI_BLUE_TEXT, ANSI_WHITE_TEXT);
     printf("\n");
 
 }
