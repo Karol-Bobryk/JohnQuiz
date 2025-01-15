@@ -34,7 +34,15 @@ GameState* GameStateInit(){
 
     return gs;
 }
-
+/*
+*   GameStateReset
+*       resets provided GameState to base values.
+*
+*   arguments
+*       *gs - GameState to be reset.
+*
+*
+*/
 void GameStateReset(GameState *gs){
 
     gs->prizeLLCur = gs->prizeLL;
@@ -488,7 +496,7 @@ int mainGameLoop(GameState *gs){
     for(size_t i = 0; i < 15; ++i){
 
         fGetRandomQuestion(gs);
-        
+
         if(i != 0 ){
             gs->prizeLLCur = gs->prizeLLCur->next;
 
@@ -504,7 +512,7 @@ int mainGameLoop(GameState *gs){
             showGameOverScreen(gs);
             return 0;
         }
-        
+
         if(gs->prizeLLCur->isSecure)
             gs->prizeSecured = gs->prizeLLCur->value;
 
@@ -600,7 +608,14 @@ bool handleQuestionInput(GameState* gs){
             }
     }
 }
-
+/*
+*   PrizeLLInit
+*       initializes a linked list of Prizes
+*
+*   return value:
+*       pointer to the head node of the list.
+*
+*/
 PrizeLL* PrizeLLInit(){
     const size_t PRIZES[15] = {
         100,
@@ -634,6 +649,14 @@ PrizeLL* PrizeLLInit(){
     return pLL;
 }
 
+/*
+*   PrizeLLFree
+*       Frees an entire linked list of Prizes.
+*
+*   arguments
+*       pLL - pointer to the head of the array
+*
+*/
 void PrizeLLFree(PrizeLL* pLL){
 
     PrizeLL* curNode = pLL;
